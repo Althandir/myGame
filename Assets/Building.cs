@@ -7,7 +7,7 @@ public class Building : MonoBehaviour
     [SerializeField]
     BuildingType _type;
     [SerializeField]
-    bool isInitialized;
+    bool isInitialized = false;
 
     public void SetType(BuildingType newType)
     {
