@@ -12,6 +12,10 @@ public class Interactable : MonoBehaviour
     [Header("DEBUG_VALUES:")]
     [SerializeField]
     InteractableType _type;
+    [SerializeField]
+    MeshRenderer _meshRenderer;
+    [SerializeField]
+    Color _initColor;
 
     void Awake()
     {
@@ -27,6 +31,9 @@ public class Interactable : MonoBehaviour
         {
             _type = InteractableType.undefined;
         }
+
+        _meshRenderer = this.GetComponent<MeshRenderer>();
+        _initColor = _meshRenderer.material.color;
     }
 
     public void OnClick()
@@ -50,5 +57,15 @@ public class Interactable : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    void OnMouseOver()
+    {
+        _meshRenderer.material.color = Color.cyan;
+    }
+
+    void OnMouseExit()
+    {
+        _meshRenderer.material.color = _initColor;
     }
 }

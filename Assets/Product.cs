@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Nessesary for Array idk why + to be visible in inspector
-[System.Serializable]
+
 public class Product : MonoBehaviour
 {
     [Header("Do NOT change unnecessary")]
@@ -11,6 +11,7 @@ public class Product : MonoBehaviour
     [SerializeField] byte initMaxPrice = 0;
     [SerializeField] string prodName = null;
     [SerializeField] Sprite icon = null;
+    [SerializeField] byte neededTicks = 0;
 
     void Awake()
     {
@@ -40,6 +41,12 @@ public class Product : MonoBehaviour
     {
         return initMaxPrice;
     }
+
+    public byte GetNeededTicks ()
+    {
+        return neededTicks;
+    }
+
 
     //Debugfunction
     public string PrintValues()

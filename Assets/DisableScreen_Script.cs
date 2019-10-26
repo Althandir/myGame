@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StorageScreen_Script : MonoBehaviour
+public class DisableScreen_Script : MonoBehaviour
 {
     public void Disable()
     {

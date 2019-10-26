@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Interactable))]
+
 public class StorageScript : MonoBehaviour
 {
     // Values of the Storage 
@@ -95,9 +97,10 @@ public class StorageScript : MonoBehaviour
             StorageScreen.SetActive(true);
         // Test for Apple
         // Working as intended!
-        
+        /*
         Transform product = GameObject.Find("GlobalGameObject/GameController/Products").transform.GetChild(0);
         InsertProduct(product.GetComponent<Product>(), 20);
+        */
         //DeductProduct(product.GetComponent<Product>(), 23);
         
         //Debug.Log(this);

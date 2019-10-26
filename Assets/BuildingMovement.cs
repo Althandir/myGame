@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ChangeCamera))]
+
 public class BuildingMovement : MonoBehaviour
 {
     // Values for MouseOver

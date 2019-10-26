@@ -75,14 +75,14 @@ class StorageSlot
         if (amount <= s_minAmount)
         {
             amount = s_minAmount;
-//            Debug.Log("Min Amount reached!");
+//          Debug.Log("Min Amount reached!");
             this._UpdateSlot();
             return false;
         }
         else
         {
             this.amount -= 1;
-//            Debug.Log("Took one " + product.GetName());
+//          Debug.Log("Took one " + product.GetName());
             this._UpdateSlot();
             return true;
         }
