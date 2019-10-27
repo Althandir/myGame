@@ -15,5 +15,8 @@ public class InitGame : MonoBehaviour
             cam.GetComponent<Camera>().enabled = false;
         }
         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().enabled = true;
+
+        ProductionLists.CreateProductionLists();
+
     }
 }

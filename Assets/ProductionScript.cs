@@ -11,7 +11,8 @@ public class ProductionScript : MonoBehaviour
     GameObject ProductionScreen;
     [SerializeField]
     BuildingType buildingType;
-
+    [SerializeField]
+    List<Product> productList;
     void Awake()
     {
         // Link to UI                                           Building    Camera      Screen
@@ -20,56 +21,22 @@ public class ProductionScript : MonoBehaviour
         ProductionScreen.SetActive(false);
         // GetProductionType
         buildingType = transform.parent.GetComponent<Building>().GetBuildingType();
-        InitProduction();
+        // TODO Init when Type is set
+        // InitProduction();
     }
 
     public void InitProduction()
     {
-        // Checks if Building is a Storage: if so disable ProductionSystem
-        if (buildingType == BuildingType.Storage)
+        productList = ProductionLists.GetProductList(buildingType);
+        if (productList == null && buildingType == BuildingType.Storage)
         {
             gameObject.SetActive(false);
         }
-        else if (buildingType != BuildingType.Undefined)
+        else if (productList == null && buildingType != BuildingType.Storage)
         {
-            // TODO : Produce Goods
-            Produce();
-        }
-        else // Undefined!
-        {
-            Debug.LogWarning("Invalid BuildingType for " + transform.parent.name);
+            Debug.LogWarning(transform.parent.name + " Production has Problems in ProductionScript! Please Check Type!" );
         }
     }
-
-    void Produce()
-    {
-        switch (buildingType)
-        {
-            case BuildingType.Undefined:
-                {
-                    break;
-                }
-            case BuildingType.Storage:
-                {
-                    break;
-                }
-            case BuildingType.Farm:
-                {
-                    break;
-                }
-            case BuildingType.Woodcutter:
-                {
-                    break;
-                }
-            default:
-                {
-                    Debug.LogWarning("Something went wrong During Production " + transform.parent.name);
-                    break;
-                }
-        }
-
-    }
-
 
     IEnumerator GetNextTick()
     {
@@ -85,6 +52,7 @@ public class ProductionScript : MonoBehaviour
             ProductionScreen.SetActive(true);
 
         // Testfunctions
+        InitProduction();
     }
 
 }
