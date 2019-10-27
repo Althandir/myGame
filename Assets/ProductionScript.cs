@@ -43,6 +43,30 @@ public class ProductionScript : MonoBehaviour
 
     void Produce()
     {
+        switch (buildingType)
+        {
+            case BuildingType.Undefined:
+                {
+                    break;
+                }
+            case BuildingType.Storage:
+                {
+                    break;
+                }
+            case BuildingType.Farm:
+                {
+                    break;
+                }
+            case BuildingType.Woodcutter:
+                {
+                    break;
+                }
+            default:
+                {
+                    Debug.LogWarning("Something went wrong During Production " + transform.parent.name);
+                    break;
+                }
+        }
 
     }
 
