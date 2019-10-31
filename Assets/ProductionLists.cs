@@ -30,7 +30,6 @@ public static class ProductionLists
             case BuildingType.Farm:
                 {
                     return ProductionLists.FarmList;
-
                 }
             case BuildingType.Woodcutter:
                 {
@@ -42,7 +41,7 @@ public static class ProductionLists
                 {
                     return null;
                 }
-        }
+        }     
     }
 
     static void InitFarmList()

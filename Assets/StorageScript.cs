@@ -16,8 +16,8 @@ public class StorageScript : MonoBehaviour
     void Awake()
     {
         // Init Array
-        storageSlots = new StorageSlot[4];
-        // Get StorageUI                                    Building    Camera      Screen
+        storageSlots = new StorageSlot[6];
+        // Get StorageUI                         Building    Camera      Screen
         StorageScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(0).gameObject;
         // Init each slot + Link Slots to UI
         for (int i = 0; i < storageSlots.Length; i++)
