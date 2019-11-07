@@ -7,39 +7,23 @@ using UnityEngine;
 public class Product : ScriptableObject
 {
     [Header("Do NOT change unnecessary")]
-    [SerializeField] byte initMinPrice = 0;
-    [SerializeField] byte initMaxPrice = 0;
-    [SerializeField] string productName = null;
-    [SerializeField] Sprite icon = null;
-    [SerializeField] byte neededTicks = 0;
+    [SerializeField] byte _minPrice = 0;
+    [SerializeField] byte _maxPrice = 0;
+    [SerializeField] string _productName = null;
+    [SerializeField] Sprite _icon = null;
+    [SerializeField] float _neededProductionTime = 0.0f;
 
     // learn how 2 do this 
-    public Sprite Icon { get => icon; set => icon = value; }
-
-    public string GetName()
-    {
-        return productName;
-    }
-
-    public byte GetMinPrice()
-    {
-        return initMinPrice;
-    }
-
-    public byte GetMaxPrice()
-    {
-        return initMaxPrice;
-    }
-
-    public byte GetNeededTicks ()
-    {
-        return neededTicks;
-    }
+    public Sprite Icon { get => _icon; set => _icon = value; }
+    public float NeededProductionTime { get => _neededProductionTime; set => _neededProductionTime = value; }
+    public string Name { get => _productName; }
+    public byte InitMinPrice { get => _minPrice; set => _minPrice = value; }
+    public byte InitMaxPrice { get => _maxPrice; set => _maxPrice = value; }
 
     //Debugfunction
     public string PrintValues()
     {
-        return ("Name: " + productName + " min/maxPrice: " + initMinPrice + "/" + initMaxPrice);
+        return ("Name: " + Name + " min/maxPrice: " + InitMinPrice + "/" + InitMaxPrice);
     }
 
 }

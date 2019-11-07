@@ -979,11 +979,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 245185d8c7e64214485bcebb9ae5bd32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UI_ProductSlotPrefab: {fileID: 6465252277586121022, guid: 1befcadf601b1e245bf94697fa148c6d,
+    type: 3}
   ProductionScreen: {fileID: 0}
   buildingType: 0
   productList: []
-  UI_ProductSlotPrefab: {fileID: 6465252277586121022, guid: 1befcadf601b1e245bf94697fa148c6d,
-    type: 3}
   UI_ProductionContent: {fileID: 0}
 --- !u!1 &95539219
 GameObject:
@@ -1069,6 +1069,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _type: 0
   isInitialized: 0
+  ownProductionReference: {fileID: 0}
+  ownStorageReference: {fileID: 0}
 --- !u!1 &116645528
 GameObject:
   m_ObjectHideFlags: 0
@@ -6820,7 +6822,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 1200}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1117737696
 MonoBehaviour:
@@ -8606,7 +8608,8 @@ MonoBehaviour:
   _FarmList_0:
   - {fileID: 11400000, guid: 55dd0c076225dd44c8adca27f9f80cc5, type: 2}
   - {fileID: 11400000, guid: 178899e4422654c4b96ac6b4f5c78883, type: 2}
-  _WoodcutterList_1: []
+  _WoodcutterList_1:
+  - {fileID: 11400000, guid: a8cab11482ff54e47a94be6e6d371f0c, type: 2}
 --- !u!1 &1387609440
 GameObject:
   m_ObjectHideFlags: 0
@@ -11865,8 +11868,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1929114768}
   m_HandleRect: {fileID: 1929114767}
   m_Direction: 2
-  m_Value: 0.49999994
-  m_Size: 0.29166666
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

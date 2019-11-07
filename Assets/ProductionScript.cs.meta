@@ -3,7 +3,11 @@ guid: 245185d8c7e64214485bcebb9ae5bd32
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ProductionScreen: {instanceID: 0}
+  - UI_ProductSlotPrefab: {fileID: 6465252277586121022, guid: 1befcadf601b1e245bf94697fa148c6d,
+      type: 3}
+  - UI_ProductionContent: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -123,7 +123,7 @@ class StorageSlot
     {
         if (product)
         {
-            return (product.GetName() + "| Anzahl: " + this.amount);
+            return (product.Name + "| Anzahl: " + this.amount);
         }
         else
         {

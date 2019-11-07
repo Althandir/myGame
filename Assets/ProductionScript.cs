@@ -8,6 +8,10 @@ using TMPro;
 
 public class ProductionScript : MonoBehaviour
 {
+    [Header("Reference to the Prefab of the ProductionSlot")]
+    [SerializeField]
+    GameObject UI_ProductSlotPrefab = null;
+
     [Header("DEBUG_VALUES:")]
     [SerializeField]
     Transform ProductionScreen;
@@ -15,8 +19,6 @@ public class ProductionScript : MonoBehaviour
     BuildingType buildingType;
     [SerializeField]
     List<Product> productList;
-    [SerializeField]
-    GameObject UI_ProductSlotPrefab = null;
     [SerializeField]
     Transform UI_ProductionContent = null;
 
@@ -26,22 +28,21 @@ public class ProductionScript : MonoBehaviour
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = ProductionScreen.GetChild(3).GetChild(0);
         // Resets ScrollView Content
-        UI_ProductionContent.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 20);
+        ResetUI();
         // Disable UI
         ProductionScreen.gameObject.SetActive(false);
-        // GetProductionType
-        buildingType = transform.parent.GetComponent<Building>().GetBuildingType();
     }
 
     public void UpdateBuildingType(BuildingType buildingType)
     {
         this.buildingType = buildingType;
+        UpdateProductionList();
     }
 
     public void UpdateProductionList()
     {
-        DeleteUI();
-        buildingType = transform.parent.GetComponent<Building>().GetBuildingType();
+        ResetUI();
+
         productList = ProductionLists.GetProductList(buildingType);
         if (productList == null && buildingType == BuildingType.Storage)
         {
@@ -60,6 +61,7 @@ public class ProductionScript : MonoBehaviour
             }
             else
             {
+                // Creates one clickable Icon for each Product in the List
                 foreach (Product product in productList)
                 {
                     string name = "ProductSlot (";
@@ -79,24 +81,18 @@ public class ProductionScript : MonoBehaviour
                     // Sets Icon of the ProductSlot
                     UI_ProductSlot.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
                     // Sets maxNeededTicks
-                    UI_ProductSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.GetNeededTicks();
+                    UI_ProductSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
                     // Sets Slider 
                     Slider slider = UI_ProductSlot.transform.GetChild(2).GetComponent<Slider>();
                     slider.value = 0;
-                    slider.maxValue = product.GetNeededTicks();
+                    slider.maxValue = product.NeededProductionTime;
                     slider.minValue = 0;
                 }
             }
         }
     }
 
-    IEnumerator GetNextTick()
-    {
-        // Checks for next Tick every 0.5 sec
-        yield return new WaitForSeconds(0.5f);
-    }
-
-    private void DeleteUI()
+    private void ResetUI()
     {
         // Checks for Children and destorys them! - Anakin Skywalker Style
         if (UI_ProductionContent.childCount > 0)
@@ -107,6 +103,8 @@ public class ProductionScript : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        // Resets Scrollview 
+        UI_ProductionContent.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 20);
     }
 
     public void OnClick()
@@ -114,9 +112,6 @@ public class ProductionScript : MonoBehaviour
         // Display Production.GUI
         if (!ProductionScreen.gameObject.activeSelf)
             ProductionScreen.gameObject.SetActive(true);
-
-        // Testfunctions
-        UpdateProductionList();
     }
 
 }

@@ -9,47 +9,34 @@ public class GlobalTimer : MonoBehaviour
         slow, medium, fast
     }
 
-    float _time;
-    GameSpeed _gameSpeed;
-    public static bool s_nextTick;
+    [SerializeField] GameSpeed _gameSpeed;
 
     void Awake()
     {
-        _time = 0f;
         _gameSpeed = GameSpeed.medium;
     }
 
-    void Update()
+    void UpdateGameSpeed()
     {
-        _time += Time.deltaTime;
         switch (_gameSpeed)
         {
             case GameSpeed.slow:
                 {
-                    if (_time >= 5)
-                    {
-                        s_nextTick = true;
-                        _time = 0;
-                    }
+                    Time.timeScale = 0.5f;
+                    Debug.Log(Time.timeScale);
                     break;
                 }
             case GameSpeed.fast:
                 {
-                    if (_time >= 1)
-                    {
-                        s_nextTick = true;
-                        _time = 0;
-                    }
+                    Time.timeScale = 2f;
+                    Debug.Log(Time.timeScale);
                     break;
                 }
             case GameSpeed.medium:
             default:
                 {
-                    if (_time >= 3)
-                    {
-                        s_nextTick = true;
-                        _time = 0;
-                    }
+                    Time.timeScale = 1f;
+                    Debug.Log(Time.timeScale);
                     break;
                 }
         }

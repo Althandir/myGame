@@ -24,7 +24,6 @@ public class BuildingMovement : MonoBehaviour
         this.gameObject.GetComponent<ChangeCamera>().ChangeCam(Camera.allCameras[0]);
     }
 
-    // TEST
     void OnMouseOver()
     {
         meshRenderer.material.color = Color.yellow;

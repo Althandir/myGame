@@ -68,7 +68,7 @@ public class StorageScript : MonoBehaviour
         {
             if (id == -1)
             {
-                Debug.Log("Cannot Deduct! Missing " + amount + " " + product.GetName());
+                Debug.Log("Cannot Deduct! Missing " + amount + " " + product.Name);
                 break;
                 //TODO::Abort Deduction :: InformPlayer or Ignore if put on cart
             }
