@@ -8593,6 +8593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c62dcf16c45692642ad97df1c4459811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameSpeed: 0
 --- !u!114 &1368732449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11868,7 +11869,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1929114768}
   m_HandleRect: {fileID: 1929114767}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
