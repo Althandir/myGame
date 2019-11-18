@@ -21,6 +21,12 @@ public class ProductionScript : MonoBehaviour
     List<Product> productList;
     [SerializeField]
     Transform UI_ProductionContent = null;
+    [SerializeField]
+    int numWorker;
+    [SerializeField]
+    float paymentTimer;
+
+    public int NumWorker { get => numWorker; set => numWorker = value; }
 
     void Awake()
     {
@@ -28,11 +34,19 @@ public class ProductionScript : MonoBehaviour
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = ProductionScreen.GetChild(3).GetChild(0);
         // Resets ScrollView Content
-        ResetUI();
+        ResetScrollViewUI();
         // Disable UI
         ProductionScreen.gameObject.SetActive(false);
+        // init numWorker & paymentTimer as 0
+        numWorker = 0;
+        paymentTimer = 0.0f;
     }
 
+    #region UI_Creation&Linking
+    /// <summary>
+    /// Whenever BuildingType changes the nessesary productionList is getting loaded.
+    /// </summary>
+    /// <param name="buildingType"></param>
     public void UpdateBuildingType(BuildingType buildingType)
     {
         this.buildingType = buildingType;
@@ -41,7 +55,7 @@ public class ProductionScript : MonoBehaviour
 
     public void UpdateProductionList()
     {
-        ResetUI();
+        ResetScrollViewUI();
 
         productList = ProductionLists.GetProductList(buildingType);
         if (productList == null && buildingType == BuildingType.Storage)
@@ -73,6 +87,7 @@ public class ProductionScript : MonoBehaviour
                     // Create Production Slot
                     GameObject UI_ProductSlot = Instantiate(UI_ProductSlotPrefab, UI_ProductionContent);
                     UI_ProductSlot.name = name + productList.IndexOf(product) + ")";
+                    UI_ProductSlot.GetComponent<ProductionSlot>().ProductionReference = this;
 
                     // Position Icon on left side
                     RectTransform ProdSlot_rt = UI_ProductSlot.GetComponent<RectTransform>();
@@ -91,8 +106,9 @@ public class ProductionScript : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    private void ResetUI()
+    private void ResetScrollViewUI()
     {
         // Checks for Children and destorys them! - Anakin Skywalker Style
         if (UI_ProductionContent.childCount > 0)
