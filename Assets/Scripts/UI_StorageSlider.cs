@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIStorageSlider : MonoBehaviour
+public class UI_StorageSlider : MonoBehaviour
 {
     [Header("Debug_Values:")]
     [SerializeField]
@@ -29,27 +29,29 @@ public class UIStorageSlider : MonoBehaviour
 
     public void UpdateSlider(byte amount)
     {
-        _slider.value = amount;
-        if (amount < 25)
+        if (_slider != null && _bar != null)
         {
-            _bar.color = Color.red;
-        }
-        else if (amount >= 25 && amount <= 75)
-        {
-            _bar.color = Color.cyan;
-        } 
-        else if (amount > 75)
-        {
-            _bar.color = Color.green;
-        }
-
-        if (amount == 0)
-        {
-            _slider.enabled = false;
-        }
-        else
-        {
-            _slider.enabled = true;
+            if (amount == 0)
+            {
+                _slider.enabled = false;
+            }
+            else
+            {
+                _slider.enabled = true;
+                _slider.value = amount;
+                if (amount < 25)
+                {
+                    _bar.color = Color.red;
+                }
+                else if (amount >= 25 && amount <= 75)
+                {
+                    _bar.color = Color.cyan;
+                }
+                else if (amount > 75)
+                {
+                    _bar.color = Color.green;
+                }
+            }
         }
     }
 

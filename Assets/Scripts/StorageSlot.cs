@@ -19,7 +19,7 @@ class StorageSlot
     [SerializeField]
     TextMeshProUGUI UI_SlotText = null;
     [SerializeField]
-    UIStorageSlider UI_Slider = null;
+    UI_StorageSlider UI_Slider = null;
     [SerializeField]
     Product product = null;
     [SerializeField]
@@ -34,7 +34,7 @@ class StorageSlot
         SlotNum_UIReference = SlotReference;
         UI_SlotIcon = SlotNum_UIReference.transform.GetChild(0).GetComponent<Image>();
         UI_SlotText = SlotNum_UIReference.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        UI_Slider = SlotNum_UIReference.transform.GetChild(2).GetComponent<UIStorageSlider>();
+        UI_Slider = SlotNum_UIReference.transform.GetChild(2).GetComponent<UI_StorageSlider>();
 
         UI_SlotIcon.enabled = false;
         UI_SlotText.enabled = false;
@@ -92,16 +92,9 @@ class StorageSlot
     {
         if (amount == 0)
         {
-            product = null;
-            UI_SlotIcon.sprite = null;
-            UI_SlotIcon.enabled = false;
-
-            UI_SlotText.text = null;
-            UI_SlotText.enabled = false;
-
-            UI_Slider.UpdateSlider(amount);
+            ResetSlot();
         }
-        else if (amount > 0) // to many calls!
+        else if (amount > 0) 
         {
             UI_SlotIcon.sprite = product.Icon;
             UI_SlotIcon.enabled = true;
@@ -111,6 +104,18 @@ class StorageSlot
 
             UI_Slider.UpdateSlider(amount);
         }
+    }
+
+    public void ResetSlot()
+    {
+        product = null;
+        UI_SlotIcon.sprite = null;
+        UI_SlotIcon.enabled = false;
+
+        UI_SlotText.text = null;
+        UI_SlotText.enabled = false;
+
+        UI_Slider.UpdateSlider(0);
     }
 
     private string AmountToUI()

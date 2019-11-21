@@ -19,12 +19,12 @@ public class RayCastToCursor : MonoBehaviour
     void ClickedOn(RaycastHit raycastHit)
     {
         Transform objectHit = raycastHit.transform;
-        if (objectHit.gameObject.tag.Equals("Movement"))
+        if (objectHit.GetComponent<BuildingMovement>())
         {
             BuildingMovement buildingMovement = objectHit.gameObject.GetComponent<BuildingMovement>();
             buildingMovement.OnClick();
         }
-        else if (objectHit.gameObject.tag.Equals("Interactable"))
+        else if (objectHit.GetComponent<Interactable>())
         {
             Interactable interactable = objectHit.gameObject.GetComponent<Interactable>();
             interactable.OnClick();

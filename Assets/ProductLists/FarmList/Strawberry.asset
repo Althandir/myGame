@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
-  m_Name: Wood
+  m_Name: Strawberry
   m_EditorClassIdentifier: 
-  _minPrice: 1
-  _maxPrice: 4
-  _productName: Wood
-  _icon: {fileID: 21300000, guid: e0eac6b76fdd842e88a7f8c75ecffaf4, type: 3}
-  _neededProductionTime: 1.5
+  _minPrice: 5
+  _maxPrice: 25
+  _productName: Strawberry
+  _icon: {fileID: 21300000, guid: 4f84ee7a8f2660445a809e8d54aa9111, type: 3}
+  _neededProductionTime: 8

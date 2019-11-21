@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Nessesary for Array idk why + to be visible in inspector
 [CreateAssetMenu]
 public class Product : ScriptableObject
 {

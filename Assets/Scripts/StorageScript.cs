@@ -27,7 +27,7 @@ public class StorageScript : MonoBehaviour
         // close UI
         StorageScreen.SetActive(false); 
     }
-
+    #region Inserting & Deducting Functions
     // Inserting from Slot no.0 to x
     public void InsertProduct(Product product, byte amount)
     {
@@ -88,7 +88,17 @@ public class StorageScript : MonoBehaviour
             id -= 1; //get next Slot
         }
     }
+    #endregion
 
+    #region Resetfunction
+    public void ResetSlots()
+    {
+        foreach (StorageSlot slot in storageSlots)
+        {
+            slot.ResetSlot();
+        }
+    }
+    #endregion
     public void OnClick()
     {
         //Display GUI...
@@ -98,8 +108,8 @@ public class StorageScript : MonoBehaviour
         // Test for Apple
         // Working as intended!
         /*
-        Transform product = GameObject.Find("GlobalGameObject/GameController/Products").transform.GetChild(0);
-        InsertProduct(product.GetComponent<Product>(), 20);
+        Product product = ProductionLists.FarmList[0]; 
+        InsertProduct(product, 20);
         */
         //DeductProduct(product.GetComponent<Product>(), 23);
         

@@ -10,14 +10,14 @@ public class Building : MonoBehaviour
     [SerializeField]
     bool isInitialized = false;
     [SerializeField]
-    GameObject ownProductionReference = null;
+    ProductionScript ownProductionReference = null;
     [SerializeField]
-    GameObject ownStorageReference = null;
+    StorageScript ownStorageReference = null;
 
     void Awake()
     {
-        ownStorageReference = transform.GetChild(4).gameObject;
-        ownProductionReference = transform.GetChild(5).gameObject;
+        ownStorageReference = transform.GetChild(4).GetComponent<StorageScript>();
+        ownProductionReference = transform.GetChild(5).GetComponent<ProductionScript>();
     }
 
     // Works as Intended!
@@ -44,15 +44,15 @@ public class Building : MonoBehaviour
         if (!isInitialized)
         {
             _type = newType;
-            ownStorageReference.SetActive(true);
+            ownStorageReference.gameObject.SetActive(true);
 
             if (_type == BuildingType.Storage)
             {
-                ownProductionReference.SetActive(false);
+                ownProductionReference.gameObject.SetActive(false);
             }
             else
             {
-                ownProductionReference.SetActive(true);
+                ownProductionReference.gameObject.SetActive(true);
                 ownProductionReference.GetComponent<ProductionScript>().UpdateBuildingType(_type);
             }
             isInitialized = true;
@@ -62,13 +62,15 @@ public class Building : MonoBehaviour
             Debug.LogWarning(gameObject.name + " is already initialized");
         }
     }
-
+    [ContextMenu("Reset Type")]
     public void ResetType()
     {
         isInitialized = false;
         _type = BuildingType.Undefined;
-        ownStorageReference.SetActive(false);
-        ownProductionReference.SetActive(false);
+        ownStorageReference.gameObject.SetActive(false);
+        ownProductionReference.gameObject.SetActive(false);
+        ownStorageReference.ResetSlots();
+        ownProductionReference.ResetProduction();
     }
 
     public BuildingType GetBuildingType()

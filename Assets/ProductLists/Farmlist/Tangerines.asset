@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tangerines
   m_EditorClassIdentifier: 
   _minPrice: 4
-  _maxPrice: 12
+  _maxPrice: 16
   _productName: Tangerines
   _icon: {fileID: 21300000, guid: 9e8f58e968bb5d74e84129dd94161fb5, type: 3}
   _neededProductionTime: 4.25
