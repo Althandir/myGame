@@ -38,6 +38,8 @@ public class ProductionScript : MonoBehaviour
     [SerializeField]
     List<GameObject> ProductionSlots;
 
+    
+
     void Awake()
     {
         // Link to UI                                Building    Camera      Screen
@@ -85,7 +87,7 @@ public class ProductionScript : MonoBehaviour
 
     #endregion
 
-    #region Increment & DecrementFunction for Worker
+    #region Functions for Worker
     
     #region Overall
     public void IncOverallWorker()
@@ -122,6 +124,9 @@ public class ProductionScript : MonoBehaviour
             Debug.LogWarning("No unassigned Worker to fire!");
         }
     }
+    // Get Property
+    public byte NumOverallWorker { get => numOverallWorker; }
+    
     #endregion
 
     #region Available
@@ -136,6 +141,8 @@ public class ProductionScript : MonoBehaviour
         numAvailableWorker -= 1;
         UI_UpdateOverallWorkerNumber();
     }
+    // Get Property
+    public byte NumAvailableWorker { get => numAvailableWorker; }
     #endregion
 
     #endregion
