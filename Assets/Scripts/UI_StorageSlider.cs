@@ -10,44 +10,40 @@ public class UI_StorageSlider : MonoBehaviour
     Slider _slider = null;
     [SerializeField]
     Image _bar = null;
-    /*
     [SerializeField]
-    bool isInitialized = false;
-    */
-    void Awake()
-    {
-        _slider = this.gameObject.GetComponent<Slider>();
-        _slider.enabled = false;
-        _bar = this.transform.GetChild(1).GetChild(0).GetComponent<Image>();
-    }
+    byte _quarterOfMax;
+    [SerializeField]
+    byte _threeQuarterOfMax;
 
     public void Init(byte minValue, byte maxValue)
     {
+        _slider = this.gameObject.GetComponent<Slider>();
+        _bar = this.transform.GetChild(1).GetChild(0).GetComponent<Image>();
+
         _slider.minValue = minValue;
         _slider.maxValue = maxValue;
+        _slider.value = 0;
+
+        _quarterOfMax = (byte) (maxValue / 4);
+        _threeQuarterOfMax = (byte)((maxValue / 4) * 3);
     }
 
     public void UpdateSlider(byte amount)
     {
+        _slider.value = amount;
         if (_slider != null && _bar != null)
         {
-            if (amount == 0)
+            if (amount != 0)
             {
-                _slider.enabled = false;
-            }
-            else
-            {
-                _slider.enabled = true;
-                _slider.value = amount;
-                if (amount < 25)
+                if (amount < _quarterOfMax)
                 {
                     _bar.color = Color.red;
                 }
-                else if (amount >= 25 && amount <= 75)
+                else if (amount >= _quarterOfMax && amount <= _threeQuarterOfMax)
                 {
                     _bar.color = Color.cyan;
                 }
-                else if (amount > 75)
+                else if (amount > _threeQuarterOfMax)
                 {
                     _bar.color = Color.green;
                 }

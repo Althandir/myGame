@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-//Nessesary for Array idk why + to be visible in inspector
 [System.Serializable]
 class StorageSlot
 {
@@ -38,7 +37,7 @@ class StorageSlot
 
         UI_SlotIcon.enabled = false;
         UI_SlotText.enabled = false;
-        //UI_Slider.enabled = false;
+        UI_Slider.Init(s_minAmount, s_maxAmount);
     }
     
     public void SetProduct(Product product, byte amount)
@@ -79,13 +78,14 @@ class StorageSlot
             this._UpdateSlot();
             return false;
         }
-        else
+        else 
         {
             this.amount -= 1;
-//          Debug.Log("Took one " + product.GetName());
+            //          Debug.Log("Took one " + product.GetName());
             this._UpdateSlot();
             return true;
         }
+
     }
 
     void _UpdateSlot()
@@ -101,7 +101,6 @@ class StorageSlot
 
             UI_SlotText.text = AmountToUI();
             UI_SlotText.enabled = true;
-
             UI_Slider.UpdateSlider(amount);
         }
     }
@@ -114,7 +113,6 @@ class StorageSlot
 
         UI_SlotText.text = null;
         UI_SlotText.enabled = false;
-
         UI_Slider.UpdateSlider(0);
     }
 

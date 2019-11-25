@@ -107,14 +107,15 @@ public class StorageScript : MonoBehaviour
             StorageScreen.SetActive(true);
         // Test for Apple
         // Working as intended!
-        /*
-        Product product = ProductionLists.FarmList[0]; 
+        
+        Product product = ProductionLists.FarmList[0];
+        Product product2 = ProductionLists.FarmList[3];
         InsertProduct(product, 20);
-        */
-        //DeductProduct(product.GetComponent<Product>(), 23);
         
+        DeductProduct(product, 23);
+        InsertProduct(product2, 23);
         //Debug.Log(this);
-        
+
     }
 
     public override string ToString()

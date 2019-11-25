@@ -1063,6 +1063,7 @@ MonoBehaviour:
   salaryTimer: 0
   UI_ProductionContent: {fileID: 0}
   UI_WorkerPanel: {fileID: 0}
+  ProductionSlots: []
 --- !u!1 &95539219
 GameObject:
   m_ObjectHideFlags: 0
@@ -1509,6 +1510,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &139248058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5802,7 +5805,7 @@ GameObject:
   - component: {fileID: 742513311}
   - component: {fileID: 742513312}
   m_Layer: 0
-  m_Name: GlobalGameObject
+  m_Name: GlobalGameObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7194,6 +7197,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1092729464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7920,6 +7925,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1176322144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8100,6 +8107,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1196379098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9577,6 +9586,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1387609443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11160,6 +11171,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!1 &1593098814
 GameObject:
   m_ObjectHideFlags: 0
@@ -12287,6 +12300,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1726807384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13125,8 +13140,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1929114768}
   m_HandleRect: {fileID: 1929114767}
   m_Direction: 2
-  m_Value: 0.5000005
-  m_Size: 0.7500001
+  m_Value: 0.49999923
+  m_Size: 0.7499999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13725,6 +13740,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &1951285963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14203,6 +14220,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &2050963382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15047,6 +15066,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _slider: {fileID: 0}
   _bar: {fileID: 0}
+  _quarterOfMax: 0
+  _threeQuarterOfMax: 0
 --- !u!114 &2144527119
 MonoBehaviour:
   m_ObjectHideFlags: 0
