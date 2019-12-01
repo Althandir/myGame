@@ -14,7 +14,7 @@ public class ProductionScript : MonoBehaviour
 
     [Header("Reference to the Prefab of the ProductionSlot")]
     [SerializeField]
-    GameObject UI_ProductSlotPrefab = null;
+    GameObject UI_ProductQuenePrefab = null;
     
     [Header("DEBUG_VALUES:")]
     [SerializeField]
@@ -42,11 +42,13 @@ public class ProductionScript : MonoBehaviour
 
     void Awake()
     {
+
         // Link to UI                                Building    Camera      Screen
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = ProductionScreen.GetChild(3).GetChild(0);
         UI_WorkerPanel = ProductionScreen.GetChild(4);
 
+        // Init List
         ProductionSlots = new List<GameObject>();
 
         ResetProduction();
@@ -174,7 +176,7 @@ public class ProductionScript : MonoBehaviour
         else if (productList != null)
         {
             // Spawn ProductionSlot & Linking to UI
-            UI_CreateAllProductionSlots();
+            CreateAllProductionSlots();
         }
     }
     #endregion
@@ -204,9 +206,9 @@ public class ProductionScript : MonoBehaviour
         UI_WorkerPanel.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = newWorkerCost.ToString();
     }
 
-    private void UI_CreateAllProductionSlots()
+    private void CreateAllProductionSlots()
     {
-        if (!UI_ProductSlotPrefab)
+        if (!UI_ProductQuenePrefab)
         {
             Debug.LogError("Could not assign UI_Elements for " + transform.parent.name);
         }
@@ -215,34 +217,33 @@ public class ProductionScript : MonoBehaviour
             // Creates one clickable Icon for each Product in the List
             foreach (Product product in productList)
             {
-                // string name = "ProductSlot (";
-                string name = "ProductSlot";
+                string name = "ProductQueneUI (";
                 // Increase size of Background
                 RectTransform ProdContent_rt = UI_ProductionContent.GetComponent<RectTransform>();
                 ProdContent_rt.sizeDelta = new Vector2(ProdContent_rt.sizeDelta.x, ProdContent_rt.sizeDelta.y + 100);
 
-                // Create Production Slot
-                GameObject UI_ProductSlot = Instantiate(UI_ProductSlotPrefab, UI_ProductionContent);
-                //UI_ProductSlot.name = name + productList.IndexOf(product) + ")";
-                UI_ProductSlot.name = name;
-                UI_ProductSlot.GetComponent<UI_ProductionSlot>().ProductionReference = this;
+                // Create ProductionQuene UI
+                GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
+                UI_ProductQuene.name = name + productList.IndexOf(product) + ")";
+                // TODO:: Directly give Reference of Quene to UI
+                UI_ProductQuene.GetComponent<UI_ProductionQuene>().ProductionReference = this;
 
                 // Position Icon on left side
-                RectTransform ProdSlot_rt = UI_ProductSlot.GetComponent<RectTransform>();
+                RectTransform ProdSlot_rt = UI_ProductQuene.GetComponent<RectTransform>();
                 ProdSlot_rt.anchoredPosition = new Vector2(60, (-100) * (productList.IndexOf(product)) - 60);
 
                 // Sets Icon of the ProductSlot
-                UI_ProductSlot.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
+                UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
                 // Sets maxNeededTicks
-                UI_ProductSlot.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
+                UI_ProductQuene.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
                 // Sets Slider 
-                Slider slider = UI_ProductSlot.transform.GetChild(2).GetComponent<Slider>();
+                Slider slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
                 slider.value = 0;
                 slider.maxValue = product.NeededProductionTime;
                 slider.minValue = 0;
 
                 // Adds ProductSlot into List<ProductionSlot> to be referenced
-                ProductionSlots.Add(UI_ProductSlot);
+                ProductionSlots.Add(UI_ProductQuene);
             }
         }
     }

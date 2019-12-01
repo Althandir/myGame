@@ -10,14 +10,14 @@ public class Building : MonoBehaviour
     [SerializeField]
     bool isInitialized = false;
     [SerializeField]
-    ProductionScript ownProductionReference = null;
+    ProductionScript SelfProductionReference = null;
     [SerializeField]
-    StorageScript ownStorageReference = null;
+    StorageScript SelfStorageReference = null;
 
     void Awake()
     {
-        ownStorageReference = transform.GetChild(4).GetComponent<StorageScript>();
-        ownProductionReference = transform.GetChild(5).GetComponent<ProductionScript>();
+        SelfStorageReference = transform.GetChild(4).GetComponent<StorageScript>();
+        SelfProductionReference = transform.GetChild(5).GetComponent<ProductionScript>();
     }
 
     // Works as Intended!
@@ -44,16 +44,16 @@ public class Building : MonoBehaviour
         if (!isInitialized)
         {
             _type = newType;
-            ownStorageReference.gameObject.SetActive(true);
+            SelfStorageReference.gameObject.SetActive(true);
 
             if (_type == BuildingType.Storage)
             {
-                ownProductionReference.gameObject.SetActive(false);
+                SelfProductionReference.gameObject.SetActive(false);
             }
             else
             {
-                ownProductionReference.gameObject.SetActive(true);
-                ownProductionReference.GetComponent<ProductionScript>().UpdateBuildingType(_type);
+                SelfProductionReference.gameObject.SetActive(true);
+                SelfProductionReference.GetComponent<ProductionScript>().UpdateBuildingType(_type);
             }
             isInitialized = true;
         }
@@ -67,10 +67,10 @@ public class Building : MonoBehaviour
     {
         isInitialized = false;
         _type = BuildingType.Undefined;
-        ownStorageReference.gameObject.SetActive(false);
-        ownProductionReference.gameObject.SetActive(false);
-        ownStorageReference.ResetSlots();
-        ownProductionReference.ResetProduction();
+        SelfStorageReference.gameObject.SetActive(false);
+        SelfProductionReference.gameObject.SetActive(false);
+        SelfStorageReference.ResetSlots();
+        SelfProductionReference.ResetProduction();
     }
 
     public BuildingType GetBuildingType()

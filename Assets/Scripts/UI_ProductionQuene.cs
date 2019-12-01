@@ -4,7 +4,7 @@
 /// Links UI_Slot to ProductionSlot. 
 /// </summary>
 
-public class UI_ProductionSlot : MonoBehaviour
+public class UI_ProductionQuene : MonoBehaviour
 {
     [Header("Debug_Values::")]
     [SerializeField] ProductionScript productionReference;
