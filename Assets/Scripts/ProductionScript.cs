@@ -46,8 +46,8 @@ public class ProductionScript : MonoBehaviour
 
         // Link to UI                                Building    Camera      Screen
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
-        UI_ProductionContent = ProductionScreen.GetChild(3).GetChild(0);
-        UI_WorkerPanel = ProductionScreen.GetChild(4);
+        UI_ProductionContent = ProductionScreen.GetChild(2).GetChild(0);
+        UI_WorkerPanel = ProductionScreen.GetChild(3);
 
         // Init List
         ProductionSlots = new List<GameObject>();
@@ -199,8 +199,10 @@ public class ProductionScript : MonoBehaviour
                 Destroy(UI_QueneChild.gameObject);
             }
         }
+        
         // Resets Scrollview 
-        UI_ProductionContent.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 20);
+        UI_ProductionContent.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
+        
     }
 
     private void UI_UpdateOverallWorkerNumber()
@@ -221,25 +223,33 @@ public class ProductionScript : MonoBehaviour
         }
         else
         {
+            
+            #region calcBackgroundSize
+            // Get values for Background Size
+            float _prefabHeight = UI_ProductQuenePrefab.GetComponent<RectTransform>().rect.height;
+            float _verticalLayoutSpacing = UI_ProductionContent.GetComponent<VerticalLayoutGroup>().spacing;
+            #endregion
+
             // Creates one clickable Icon & Quene for each Product in the List
             foreach (Product product in productList)
             {
                 string name = "ProductQueneUI (";
+
                 // Increase size of Background
                 RectTransform ProdContent_rt = UI_ProductionContent.GetComponent<RectTransform>();
-                ProdContent_rt.sizeDelta = new Vector2(ProdContent_rt.sizeDelta.x, ProdContent_rt.sizeDelta.y + 100);
-
+                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing);
+                
                 // Create ProductionQuene UI
                 GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
                 UI_ProductQuene.name = name + productList.IndexOf(product) + ")";
                 // TODO:: Directly give Reference of Quene to UI
                 UI_ProductionQuene _UI_ProductionQueneRef = UI_ProductQuene.GetComponent<UI_ProductionQuene>();
                 _UI_ProductionQueneRef.ProductionReference = this;
-
+                /*
                 // Position Icon on left side
                 RectTransform _ProdSlot_rectTransform = UI_ProductQuene.GetComponent<RectTransform>();
                 _ProdSlot_rectTransform.anchoredPosition = new Vector2(60, (-100) * (productList.IndexOf(product)) - 60);
-
+                */
                 // Sets Icon of the ProductSlot
                 UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
                 // Sets maxNeededTicks
