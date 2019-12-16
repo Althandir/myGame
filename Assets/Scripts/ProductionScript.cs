@@ -11,11 +11,12 @@ public class ProductionScript : MonoBehaviour
     const byte initWorkerCost = 100;
     const byte maxWorkerNum = 99;
     const byte minWorkerNum = 0;
-
-    [Header("Reference to the Prefab of the ProductionSlot")]
+    
+    [Header("Reference to the Prefabs of the ProductionQuene")]
     [SerializeField]
     GameObject UI_ProductQuenePrefab = null;
-    
+    [SerializeField]
+    GameObject ProductQuenePrefab = null;
     [Header("DEBUG_VALUES:")]
     [SerializeField]
     Transform ProductionScreen;
@@ -51,8 +52,13 @@ public class ProductionScript : MonoBehaviour
         // Init List
         ProductionSlots = new List<GameObject>();
 
-        ResetProduction();
         
+        
+    }
+
+    private void Start()
+    {
+        ResetProduction();
     }
 
     void Update()
@@ -67,8 +73,9 @@ public class ProductionScript : MonoBehaviour
         salaryTimer = 0.0f;
         productList = null;
         newWorkerCost = initWorkerCost;
+        ResetProductionQuene();
         ProductionSlots.Clear();
-        UI_ResetScrollView();
+        UI_ResetProductionQuene();
         UI_UpdateOverallWorkerNumber();
         UI_UpdateWorkerPrice();
 
@@ -131,7 +138,7 @@ public class ProductionScript : MonoBehaviour
     
     #endregion
 
-    #region Available
+    #region Available Worker Functions
     public void IncAvailableWorker()
     {
         numAvailableWorker += 1;
@@ -162,8 +169,8 @@ public class ProductionScript : MonoBehaviour
 
     public void UpdateProductionList()
     {
-        UI_ResetScrollView();
-
+        ResetProductionQuene();
+        UI_ResetProductionQuene();
         productList = ProductionLists.GetProductList(buildingType);
         if (productList == null && buildingType == BuildingType.Storage)
         {
@@ -182,14 +189,14 @@ public class ProductionScript : MonoBehaviour
     #endregion
 
     #region UI_Functions
-    private void UI_ResetScrollView()
+    private void UI_ResetProductionQuene()
     {
         // Checks for Children and destorys them! - Anakin Skywalker Style
         if (UI_ProductionContent.childCount > 0)
         {
-            foreach (Transform child in UI_ProductionContent)
+            foreach (Transform UI_QueneChild in UI_ProductionContent)
             {
-                Destroy(child.gameObject);
+                Destroy(UI_QueneChild.gameObject);
             }
         }
         // Resets Scrollview 
@@ -214,7 +221,7 @@ public class ProductionScript : MonoBehaviour
         }
         else
         {
-            // Creates one clickable Icon for each Product in the List
+            // Creates one clickable Icon & Quene for each Product in the List
             foreach (Product product in productList)
             {
                 string name = "ProductQueneUI (";
@@ -226,30 +233,46 @@ public class ProductionScript : MonoBehaviour
                 GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
                 UI_ProductQuene.name = name + productList.IndexOf(product) + ")";
                 // TODO:: Directly give Reference of Quene to UI
-                UI_ProductQuene.GetComponent<UI_ProductionQuene>().ProductionReference = this;
+                UI_ProductionQuene _UI_ProductionQueneRef = UI_ProductQuene.GetComponent<UI_ProductionQuene>();
+                _UI_ProductionQueneRef.ProductionReference = this;
 
                 // Position Icon on left side
-                RectTransform ProdSlot_rt = UI_ProductQuene.GetComponent<RectTransform>();
-                ProdSlot_rt.anchoredPosition = new Vector2(60, (-100) * (productList.IndexOf(product)) - 60);
+                RectTransform _ProdSlot_rectTransform = UI_ProductQuene.GetComponent<RectTransform>();
+                _ProdSlot_rectTransform.anchoredPosition = new Vector2(60, (-100) * (productList.IndexOf(product)) - 60);
 
                 // Sets Icon of the ProductSlot
                 UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
                 // Sets maxNeededTicks
                 UI_ProductQuene.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
                 // Sets Slider 
-                Slider slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
-                slider.value = 0;
-                slider.maxValue = product.NeededProductionTime;
-                slider.minValue = 0;
+                Slider _slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
+                _slider.value = 0;
+                _slider.maxValue = product.NeededProductionTime;
+                _slider.minValue = 0;
 
                 // Adds ProductSlot into List<ProductionSlot> to be referenced
                 ProductionSlots.Add(UI_ProductQuene);
+
+                // Create new ProductionQuene 
+                GameObject productQuene = Instantiate(ProductQuenePrefab, this.transform);
+                ProductionQuene _ProductionQueneScriptRef = productQuene.GetComponent<ProductionQuene>();
+                _ProductionQueneScriptRef.Init(_UI_ProductionQueneRef, this);
             }
         }
     }
     #endregion
-
-
+    // Checks for any Quene as Child of this transform and destroys them
+    private void ResetProductionQuene()
+    {
+        if (this.transform.childCount > 0)
+        {
+            foreach (Transform Quene_Child in this.transform)
+            {
+                Quene_Child.GetComponent<ProductionQuene>().StopAllRoutines();
+                Destroy(Quene_Child.gameObject);
+            }
+        }
+    }
 
     public void OnClick()
     {

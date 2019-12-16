@@ -12,7 +12,6 @@ public class Product : ScriptableObject
     [SerializeField] Sprite _icon = null;
     [SerializeField] float _neededProductionTime = 0.0f;
 
-    // learn how 2 do this 
     public Sprite Icon { get => _icon; set => _icon = value; }
     public float NeededProductionTime { get => _neededProductionTime; set => _neededProductionTime = value; }
     public string Name { get => _productName; }

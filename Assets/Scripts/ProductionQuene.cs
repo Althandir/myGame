@@ -10,28 +10,21 @@ public class ProductionQuene : MonoBehaviour
     [SerializeField] HasError hasError;
     [SerializeField] byte NumAssignedWorker;
     [SerializeField] ProductionScript ProductionRef;
-    [SerializeField] GameObject UI_ProductionSlotRef;
+    [SerializeField] UI_ProductionQuene UI_ProductionSlotRef;
     
     #region Definition of Error
     private enum HasError
     {
-        yes, no
+        no, yes
     }
     #endregion
 
-    private void Awake()
-    {
-        ProductionRef = this.transform.parent.GetComponent<ProductionScript>();
-    }
-
-
-
-    public void Init(GameObject UI_ProductionSlotRef)
+    public void Init(UI_ProductionQuene UI_ProductionSlotRef, ProductionScript ProductionRef)
     {
         if (!isInit)
         {
             this.UI_ProductionSlotRef = UI_ProductionSlotRef;
-
+            this.ProductionRef = ProductionRef;
 
             isInit = true;
         }
@@ -41,7 +34,10 @@ public class ProductionQuene : MonoBehaviour
         }
     }
 
-    
+    public void StopAllRoutines()
+    {
+        StopAllCoroutines();
+    }
 
     public void UI_Update()
     {
@@ -54,6 +50,7 @@ public class ProductionQuene : MonoBehaviour
         if (ProductionRef.NumAvailableWorker != 0)
         {
             NumAssignedWorker += 1;
+            UI_Update();
         }
         else
         {
@@ -67,6 +64,7 @@ public class ProductionQuene : MonoBehaviour
         {
             NumAssignedWorker -= 1;
             ProductionRef.IncAvailableWorker();
+            UI_Update();
         }
         else
         {

@@ -62,6 +62,7 @@ public class Building : MonoBehaviour
             Debug.LogWarning(gameObject.name + " is already initialized");
         }
     }
+
     [ContextMenu("Reset Type")]
     public void ResetType()
     {

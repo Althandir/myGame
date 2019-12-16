@@ -36,6 +36,7 @@ class StorageSlot
         UI_Slider = SlotNum_UIReference.transform.GetChild(2).GetComponent<UI_StorageSlider>();
 
         UI_SlotIcon.enabled = false;
+        UI_SlotIcon.color = Color.white;
         UI_SlotText.enabled = false;
         UI_Slider.Init(s_minAmount, s_maxAmount);
     }

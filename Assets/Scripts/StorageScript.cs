@@ -6,6 +6,11 @@ using UnityEngine;
 
 public class StorageScript : MonoBehaviour
 {
+    [Header("Storage Options:")]
+    [Tooltip("Amount of Slots this Storage has. Keep in Sync with StorageSlots in UI")]
+    [SerializeField]
+    byte _amountOfSlots = 12;
+
     // Values of the Storage 
     [Header("DEBUG_VALUES:")]
     [SerializeField]
@@ -16,13 +21,13 @@ public class StorageScript : MonoBehaviour
     void Awake()
     {
         // Init Array
-        storageSlots = new StorageSlot[6];
+        storageSlots = new StorageSlot[_amountOfSlots];
         // Get StorageUI                         Building    Camera      Screen
         StorageScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(0).gameObject;
         // Init each slot + Link Slots to UI
         for (int i = 0; i < storageSlots.Length; i++)
         {
-            storageSlots[i] = new StorageSlot(StorageScreen.transform.GetChild(3).GetChild(i).gameObject);
+            storageSlots[i] = new StorageSlot(StorageScreen.transform.GetChild(2).GetChild(i).gameObject);
         }
         // close UI
         StorageScreen.SetActive(false); 

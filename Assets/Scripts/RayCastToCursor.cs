@@ -6,8 +6,7 @@ public class RayCastToCursor : MonoBehaviour
 {
     void DoRayCast()
     {
-        Vector3 mousePos = Input.mousePosition;
-        Ray ray = Camera.allCameras[0].ScreenPointToRay(mousePos);
+        Ray ray = Camera.allCameras[0].ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit))
         {
             DebugClick(raycastHit);
