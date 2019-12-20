@@ -37,9 +37,10 @@ public class ProductionScript : MonoBehaviour
     [SerializeField]
     Transform UI_WorkerPanel = null;
     [SerializeField]
-    List<GameObject> ProductionSlots;
+    List<GameObject> UI_ProductionQueneList;
+    [SerializeField]
+    List<GameObject> ProductionQueneList;
 
-    
 
     void Awake()
     {
@@ -50,10 +51,11 @@ public class ProductionScript : MonoBehaviour
         UI_WorkerPanel = ProductionScreen.GetChild(3);
 
         // Init List
-        ProductionSlots = new List<GameObject>();
+        UI_ProductionQueneList = new List<GameObject>();
+        ProductionQueneList = new List<GameObject>();
 
-        
-        
+
+
     }
 
     private void Start()
@@ -74,7 +76,7 @@ public class ProductionScript : MonoBehaviour
         productList = null;
         newWorkerCost = initWorkerCost;
         ResetProductionQuene();
-        ProductionSlots.Clear();
+        UI_ProductionQueneList.Clear();
         UI_ResetProductionQuene();
         UI_UpdateOverallWorkerNumber();
         UI_UpdateWorkerPrice();
@@ -223,7 +225,7 @@ public class ProductionScript : MonoBehaviour
         }
         else
         {
-            
+
             #region calcBackgroundSize
             // Get values for Background Size
             float _prefabHeight = UI_ProductQuenePrefab.GetComponent<RectTransform>().rect.height;
@@ -233,44 +235,57 @@ public class ProductionScript : MonoBehaviour
             // Creates one clickable Icon & Quene for each Product in the List
             foreach (Product product in productList)
             {
-                string name = "ProductQueneUI (";
-
                 // Increase size of Background
                 RectTransform ProdContent_rt = UI_ProductionContent.GetComponent<RectTransform>();
-                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing);
-                
-                // Create ProductionQuene UI
-                GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
-                UI_ProductQuene.name = name + productList.IndexOf(product) + ")";
-                // TODO:: Directly give Reference of Quene to UI
-                UI_ProductionQuene _UI_ProductionQueneRef = UI_ProductQuene.GetComponent<UI_ProductionQuene>();
-                _UI_ProductionQueneRef.ProductionReference = this;
-                /*
-                // Position Icon on left side
-                RectTransform _ProdSlot_rectTransform = UI_ProductQuene.GetComponent<RectTransform>();
-                _ProdSlot_rectTransform.anchoredPosition = new Vector2(60, (-100) * (productList.IndexOf(product)) - 60);
-                */
-                // Sets Icon of the ProductSlot
-                UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
-                // Sets maxNeededTicks
-                UI_ProductQuene.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
-                // Sets Slider 
-                Slider _slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
-                _slider.value = 0;
-                _slider.maxValue = product.NeededProductionTime;
-                _slider.minValue = 0;
+                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing );
 
-                // Adds ProductSlot into List<ProductionSlot> to be referenced
-                ProductionSlots.Add(UI_ProductQuene);
+                // Create ProductionQuene UI
+                UI_ProductionQuene _UI_ProductionQuene = _Instantiate_UI_ProductionQuene(product);
 
                 // Create new ProductionQuene 
-                GameObject productQuene = Instantiate(ProductQuenePrefab, this.transform);
-                ProductionQuene _ProductionQueneScriptRef = productQuene.GetComponent<ProductionQuene>();
-                _ProductionQueneScriptRef.Init(_UI_ProductionQueneRef, this);
+                ProductionQuene _ProductionQuene = _Instantiate_ProductionQuene(product);
+
+                // Init UI_ProductionQuene & ProductionQuene by linking each other
+                _UI_ProductionQuene.Init(_ProductionQuene, this);
+                _ProductionQuene.Init(_UI_ProductionQuene, this);
             }
         }
     }
     #endregion
+    private ProductionQuene _Instantiate_ProductionQuene(Product product)
+    {
+        const string ProductionQueneName = "ProductionQuene (";
+        GameObject ProductionQuene = Instantiate(ProductQuenePrefab, this.transform);
+        ProductionQuene.name = ProductionQueneName + productList.IndexOf(product) + ")";
+        ProductionQuene _ProductionQueneScriptRef = ProductionQuene.GetComponent<ProductionQuene>();
+
+        // Adds ProductSlot into List<ProductionQuene> to be referenced
+        ProductionQueneList.Add(ProductionQuene);
+
+        return _ProductionQueneScriptRef;
+    }
+    private UI_ProductionQuene _Instantiate_UI_ProductionQuene(Product product)
+    {
+        const string UI_ProductionQueneName = "ProductQueneUI (";
+        GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
+        UI_ProductQuene.name = UI_ProductionQueneName + productList.IndexOf(product) + ")";
+        // Sets Icon of the ProductSlot
+        UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
+        // Sets maxNeededTicks
+        UI_ProductQuene.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
+        // Sets Slider 
+        Slider _slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
+        _slider.value = 0;
+        _slider.maxValue = product.NeededProductionTime;
+        _slider.minValue = 0;
+
+        // Adds ProductSlot into List<ProductionSlot> to be referenced
+        UI_ProductionQueneList.Add(UI_ProductQuene);
+
+        return UI_ProductQuene.GetComponent<UI_ProductionQuene>();
+    }
+
+
     // Checks for any Quene as Child of this transform and destroys them
     private void ResetProductionQuene()
     {

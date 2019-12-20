@@ -7,11 +7,13 @@ public class ProductionQuene : MonoBehaviour
 
     [Header("Debug_Values::")]
     [SerializeField] bool isInit = false;
-    [SerializeField] HasError hasError;
+    [SerializeField] HasError hasError ;
     [SerializeField] byte NumAssignedWorker;
     [SerializeField] ProductionScript ProductionRef;
     [SerializeField] UI_ProductionQuene UI_ProductionSlotRef;
-    
+
+    private HasError _hasError { get => hasError; set => hasError = value; }
+
     #region Definition of Error
     private enum HasError
     {
@@ -25,7 +27,7 @@ public class ProductionQuene : MonoBehaviour
         {
             this.UI_ProductionSlotRef = UI_ProductionSlotRef;
             this.ProductionRef = ProductionRef;
-
+            
             isInit = true;
         }
         else
@@ -50,6 +52,7 @@ public class ProductionQuene : MonoBehaviour
         if (ProductionRef.NumAvailableWorker != 0)
         {
             NumAssignedWorker += 1;
+            ProductionRef.DecAvailableWorker();
             UI_Update();
         }
         else
