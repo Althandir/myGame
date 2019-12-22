@@ -117,7 +117,7 @@ public class StorageScript : MonoBehaviour
         Product product2 = ProductionLists.FarmList[3];
         InsertProduct(product, 20);
         
-        DeductProduct(product, 23);
+        DeductProduct(product, 10);
         InsertProduct(product2, 23);
         //Debug.Log(this);
 

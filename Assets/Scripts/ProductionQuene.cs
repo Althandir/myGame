@@ -7,33 +7,48 @@ public class ProductionQuene : MonoBehaviour
 
     [Header("Debug_Values::")]
     [SerializeField] bool isInit = false;
-    [SerializeField] HasError hasError ;
+    [SerializeField] ProductionError _hasError ;
     [SerializeField] byte NumAssignedWorker;
-    [SerializeField] ProductionScript ProductionRef;
-    [SerializeField] UI_ProductionQuene UI_ProductionSlotRef;
+    [SerializeField] Product _Product;
+    [SerializeField] ProductionManager _ProductionManagerRef;
+    [SerializeField] UI_ProductionQuene _UI_ProductionSlotRef;
 
-    private HasError _hasError { get => hasError; set => hasError = value; }
+    private ProductionError hasError { get => _hasError; set => _hasError = value; }
 
     #region Definition of Error
-    private enum HasError
+    private enum ProductionError
     {
         no, yes
     }
     #endregion
 
-    public void Init(UI_ProductionQuene UI_ProductionSlotRef, ProductionScript ProductionRef)
+    public void Init(UI_ProductionQuene UI_ProductionSlotRef, Product product, ProductionManager ProductionManagerRef)
     {
         if (!isInit)
         {
-            this.UI_ProductionSlotRef = UI_ProductionSlotRef;
-            this.ProductionRef = ProductionRef;
-            
+            _UI_ProductionSlotRef = UI_ProductionSlotRef;
+            _ProductionManagerRef = ProductionManagerRef;
+            _Product = product;
+
+            StartCoroutine(Produce());
+
+
             isInit = true;
         }
         else
         {
             Debug.LogWarning(this.gameObject.name + " is already init!");
         }
+    }
+
+    IEnumerator Produce()
+    {
+        while (_hasError == 0)
+        {
+            yield return new WaitForSeconds(_Product.NeededProductionTime);
+            Debug.Log(_Product.Name + " produced in " + _Product.NeededProductionTime + " Seconds.");
+        }
+        Debug.LogError("ProductionQuene Routine ended! " + gameObject.name);
     }
 
     public void StopAllRoutines()
@@ -49,10 +64,10 @@ public class ProductionQuene : MonoBehaviour
     #region Increment & Decrement assigned Worker
     public void IncAssignedWorker()
     {
-        if (ProductionRef.NumAvailableWorker != 0)
+        if (_ProductionManagerRef.NumAvailableWorker != 0)
         {
             NumAssignedWorker += 1;
-            ProductionRef.DecAvailableWorker();
+            _ProductionManagerRef.DecAvailableWorker();
             UI_Update();
         }
         else
@@ -66,7 +81,7 @@ public class ProductionQuene : MonoBehaviour
         if (NumAssignedWorker != 0)
         {
             NumAssignedWorker -= 1;
-            ProductionRef.IncAvailableWorker();
+            _ProductionManagerRef.IncAvailableWorker();
             UI_Update();
         }
         else

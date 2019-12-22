@@ -6,7 +6,7 @@ using TMPro;
 
 [RequireComponent(typeof(Interactable))]
 
-public class ProductionScript : MonoBehaviour
+public class ProductionManager : MonoBehaviour
 {
     const byte initWorkerCost = 100;
     const byte maxWorkerNum = 99;
@@ -44,7 +44,6 @@ public class ProductionScript : MonoBehaviour
 
     void Awake()
     {
-
         // Link to UI                                Building    Camera      Screen
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = ProductionScreen.GetChild(2).GetChild(0);
@@ -53,9 +52,6 @@ public class ProductionScript : MonoBehaviour
         // Init List
         UI_ProductionQueneList = new List<GameObject>();
         ProductionQueneList = new List<GameObject>();
-
-
-
     }
 
     private void Start()
@@ -67,6 +63,7 @@ public class ProductionScript : MonoBehaviour
     {
         salaryTimer += Time.deltaTime;
     }
+
     #region ResetFunction
     public void ResetProduction()
     {
@@ -217,6 +214,8 @@ public class ProductionScript : MonoBehaviour
         UI_WorkerPanel.GetChild(2).GetChild(0).GetComponent<TextMeshProUGUI>().text = newWorkerCost.ToString();
     }
 
+    #endregion
+    
     private void CreateAllProductionSlots()
     {
         if (!UI_ProductQuenePrefab)
@@ -237,7 +236,7 @@ public class ProductionScript : MonoBehaviour
             {
                 // Increase size of Background
                 RectTransform ProdContent_rt = UI_ProductionContent.GetComponent<RectTransform>();
-                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing );
+                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing);
 
                 // Create ProductionQuene UI
                 UI_ProductionQuene _UI_ProductionQuene = _Instantiate_UI_ProductionQuene(product);
@@ -246,12 +245,11 @@ public class ProductionScript : MonoBehaviour
                 ProductionQuene _ProductionQuene = _Instantiate_ProductionQuene(product);
 
                 // Init UI_ProductionQuene & ProductionQuene by linking each other
-                _UI_ProductionQuene.Init(_ProductionQuene, this);
-                _ProductionQuene.Init(_UI_ProductionQuene, this);
+                _UI_ProductionQuene.Init(_ProductionQuene, product, this);
+                _ProductionQuene.Init(_UI_ProductionQuene, product, this);
             }
         }
     }
-    #endregion
     private ProductionQuene _Instantiate_ProductionQuene(Product product)
     {
         const string ProductionQueneName = "ProductionQuene (";

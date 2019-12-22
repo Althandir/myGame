@@ -7,13 +7,15 @@
 public class UI_ProductionQuene : MonoBehaviour
 {
     [Header("Debug_Values::")]
-    [SerializeField] ProductionScript ProductionManagerReference;
-    [SerializeField] ProductionQuene ProductionQueneReference;
+    [SerializeField] Product _Product;
+    [SerializeField] ProductionManager _ProductionManagerReference;
+    [SerializeField] ProductionQuene _ProductionQueneReference;
 
-    public void Init(ProductionQuene productionQueneRef, ProductionScript productionManagerRef)
+    public void Init(ProductionQuene productionQueneRef, Product product, ProductionManager productionManagerRef)
     {
-        ProductionManagerReference = productionManagerRef;
-        ProductionQueneReference = productionQueneRef;
+        _Product = product;
+        _ProductionManagerReference = productionManagerRef;
+        _ProductionQueneReference = productionQueneRef;
     }
 
 }

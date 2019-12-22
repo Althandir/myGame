@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Raspberry
   m_EditorClassIdentifier: 
-  _minPrice: 5
-  _maxPrice: 20
+  _InitMinPrice: 6
+  _InitMaxPrice: 18
   _productName: Raspberry
   _icon: {fileID: 21300000, guid: c790f45e356ec3a49938dbf6a2f5908d, type: 3}
-  _neededProductionTime: 8
+  _InitNeededProductionTime: 7.25
+  _MinPrice: 6
+  _MaxPrice: 18
+  _NeededProductionTime: 7.25

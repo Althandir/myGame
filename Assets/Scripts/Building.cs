@@ -10,14 +10,14 @@ public class Building : MonoBehaviour
     [SerializeField]
     bool isInitialized = false;
     [SerializeField]
-    ProductionScript SelfProductionReference = null;
+    ProductionManager SelfProductionReference = null;
     [SerializeField]
     StorageScript SelfStorageReference = null;
 
     void Awake()
     {
         SelfStorageReference = transform.GetChild(4).GetComponent<StorageScript>();
-        SelfProductionReference = transform.GetChild(5).GetComponent<ProductionScript>();
+        SelfProductionReference = transform.GetChild(5).GetComponent<ProductionManager>();
     }
 
     // Works as Intended!
@@ -53,7 +53,7 @@ public class Building : MonoBehaviour
             else
             {
                 SelfProductionReference.gameObject.SetActive(true);
-                SelfProductionReference.GetComponent<ProductionScript>().UpdateBuildingType(_type);
+                SelfProductionReference.GetComponent<ProductionManager>().UpdateBuildingType(_type);
             }
             isInitialized = true;
         }

@@ -23,7 +23,7 @@ public class Interactable : MonoBehaviour
         {
             _type = InteractableType.Storage;
         }
-        else if (this.gameObject.GetComponent<ProductionScript>())
+        else if (this.gameObject.GetComponent<ProductionManager>())
         {
             _type = InteractableType.Production;
         }
@@ -47,7 +47,7 @@ public class Interactable : MonoBehaviour
                 }
             case InteractableType.Production:
                 {
-                    GetComponent<ProductionScript>().OnClick();
+                    GetComponent<ProductionManager>().OnClick();
                     break;
                 }
             case InteractableType.undefined:

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class InitGame : MonoBehaviour
 {
+    private void Awake()
+    {
+        
+    }
+
     void Start()
     {
         //Enables Cursor

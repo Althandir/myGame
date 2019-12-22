@@ -20,15 +20,19 @@ public class ProductionLists : MonoBehaviour
     void Awake()
     {
         s_FarmList = _FarmList_0.Distinct().ToList();
-        ListCheck(s_FarmList);
+        //ListCheck(s_FarmList);
         s_WoodcutterList = _WoodcutterList_1.Distinct().ToList();
-        ListCheck(s_WoodcutterList);
+        //ListCheck(s_WoodcutterList);
     }
 
     static public List<Product> FarmList { get => s_FarmList; }
     static public List<Product> WoodcutterList { get => s_WoodcutterList; }
 
     #region ListCheck
+    /* 
+     * ListCheck is unnessesary, beacuse ScriptableObject itself performs the check now
+     * 
+    
     static void ListCheck(List<Product> listToCheck)
     {
         // Not nessisary anymore because I use directly the distinct lists
@@ -50,7 +54,7 @@ public class ProductionLists : MonoBehaviour
         }
         s_listCounterDuplicateCheck += 1;
     }
-    */
+    
     static void ProductInitCheck(List<Product> listToCheck)
     {
         foreach (Product product in listToCheck)
@@ -75,7 +79,7 @@ public class ProductionLists : MonoBehaviour
         // Increase Counter to Identify Lists with Errors
         s_listCounterInitCheck += 1;
     }
-
+    */
     #endregion
 
     public static List<Product> GetProductList(BuildingType buildingType)

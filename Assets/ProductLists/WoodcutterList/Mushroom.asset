@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Mushroom
   m_EditorClassIdentifier: 
-  _minPrice: 3
-  _maxPrice: 12
-  _productName: Porcini
+  _InitMinPrice: 4
+  _InitMaxPrice: 12
+  _productName: Mushroom
   _icon: {fileID: 21300000, guid: fee071f92731965419cc0887b304fb62, type: 3}
-  _neededProductionTime: 6
+  _InitNeededProductionTime: 3.25
+  _MinPrice: 4
+  _MaxPrice: 12
+  _NeededProductionTime: 3.25

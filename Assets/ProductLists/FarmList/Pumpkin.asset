@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Pumpkin
   m_EditorClassIdentifier: 
-  _minPrice: 3
-  _maxPrice: 12
+  _InitMinPrice: 9
+  _InitMaxPrice: 27
   _productName: Pumpkin
   _icon: {fileID: 21300000, guid: 90d1984885c5da246a06178a86b4bf13, type: 3}
-  _neededProductionTime: 5.75
+  _InitNeededProductionTime: 6.25
+  _MinPrice: 9
+  _MaxPrice: 27
+  _NeededProductionTime: 6.25

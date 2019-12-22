@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Chili
   m_EditorClassIdentifier: 
-  _minPrice: 4
-  _maxPrice: 16
+  _InitMinPrice: 6
+  _InitMaxPrice: 18
   _productName: Chili
   _icon: {fileID: 21300000, guid: 4e86cb8d20d3fe945ad5d9a20b864a74, type: 3}
-  _neededProductionTime: 3.25
+  _InitNeededProductionTime: 4
+  _MinPrice: 6
+  _MaxPrice: 18
+  _NeededProductionTime: 4

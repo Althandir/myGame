@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Lemon
   m_EditorClassIdentifier: 
-  _minPrice: 8
-  _maxPrice: 32
+  _InitMinPrice: 12
+  _InitMaxPrice: 36
   _productName: Lemon
   _icon: {fileID: 21300000, guid: e98e5b189dcc48a4a90835cb83ce46de, type: 3}
-  _neededProductionTime: 12
+  _InitNeededProductionTime: 8
+  _MinPrice: 12
+  _MaxPrice: 36
+  _NeededProductionTime: 8

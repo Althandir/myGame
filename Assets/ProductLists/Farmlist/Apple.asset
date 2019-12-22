@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
-  _minPrice: 2
-  _maxPrice: 8
+  _InitMinPrice: 2
+  _InitMaxPrice: 6
   _productName: Apple
   _icon: {fileID: 21300000, guid: e4c912e795a5da9409e92d2b66d7e95e, type: 3}
-  _neededProductionTime: 2.5
+  _InitNeededProductionTime: 2.5
+  _MinPrice: 2
+  _MaxPrice: 6
+  _NeededProductionTime: 2.5

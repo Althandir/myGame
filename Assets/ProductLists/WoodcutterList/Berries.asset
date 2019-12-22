@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c8f4097573aba944a04831fc8ed39e4, type: 3}
   m_Name: Berries
   m_EditorClassIdentifier: 
-  _minPrice: 2
-  _maxPrice: 8
+  _InitMinPrice: 4
+  _InitMaxPrice: 12
   _productName: Berries
   _icon: {fileID: 21300000, guid: 8705b5eabe1cefa4681c6656508b89d8, type: 3}
-  _neededProductionTime: 2.25
+  _InitNeededProductionTime: 2.5
+  _MinPrice: 4
+  _MaxPrice: 12
+  _NeededProductionTime: 2.5
