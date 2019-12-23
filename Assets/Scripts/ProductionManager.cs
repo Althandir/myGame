@@ -13,42 +13,35 @@ public class ProductionManager : MonoBehaviour
     const byte minWorkerNum = 0;
     
     [Header("Reference to the Prefabs of the ProductionQuene")]
-    [SerializeField]
-    GameObject UI_ProductQuenePrefab = null;
-    [SerializeField]
-    GameObject ProductQuenePrefab = null;
-    [Header("DEBUG_VALUES:")]
-    [SerializeField]
-    Transform ProductionScreen;
-    [SerializeField]
-    BuildingType buildingType;
-    [SerializeField]
-    List<Product> productList;
-    [SerializeField]
-    byte numOverallWorker;
-    [SerializeField]
-    byte numAvailableWorker;
-    [SerializeField]
-    uint newWorkerCost;
-    [SerializeField]
-    float salaryTimer;
-    [SerializeField]
-    Transform UI_ProductionContent = null;
-    [SerializeField]
-    Transform UI_WorkerPanel = null;
-    [SerializeField]
-    List<GameObject> UI_ProductionQueneList;
-    [SerializeField]
-    List<GameObject> ProductionQueneList;
+    [SerializeField] GameObject UI_ProductQuenePrefab = null;
+    [SerializeField] GameObject ProductQuenePrefab = null;
+    [Header("Debug_Values :: OnAwake")]
+    [SerializeField] Transform ProductionScreen;
+    [SerializeField] StorageScript BuildingStorage;
+    [SerializeField] Transform UI_ProductionContent = null;
+    [SerializeField] Transform UI_WorkerPanel = null;
+    [SerializeField] List<GameObject> UI_ProductionQueneList;
+    [SerializeField] List<GameObject> ProductionQueneList;
+    [Header("Debug_Values :: Runtime")]
+    [SerializeField] BuildingType buildingType;
+    [SerializeField] List<Product> productList;
+    [SerializeField] byte numOverallWorker;
+    [SerializeField] byte numAvailableWorker;
+    [SerializeField] uint newWorkerCost;
+    [SerializeField] float salaryTimer;
+
 
 
     void Awake()
     {
+        // TODO: Maybe giving References directly in finished Prefab?
         // Link to UI                                Building    Camera      Screen
         ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = ProductionScreen.GetChild(2).GetChild(0);
         UI_WorkerPanel = ProductionScreen.GetChild(3);
 
+        // Link to Storage
+        BuildingStorage = this.transform.parent.GetChild(4).GetComponent<StorageScript>();
         // Init List
         UI_ProductionQueneList = new List<GameObject>();
         ProductionQueneList = new List<GameObject>();
@@ -75,7 +68,7 @@ public class ProductionManager : MonoBehaviour
         ResetProductionQuene();
         UI_ProductionQueneList.Clear();
         UI_ResetProductionQuene();
-        UI_UpdateOverallWorkerNumber();
+        UI_UpdateWorkerNumber();
         UI_UpdateWorkerPrice();
 
         // Disable UI
@@ -105,7 +98,7 @@ public class ProductionManager : MonoBehaviour
         {
             numOverallWorker += 1;
             numAvailableWorker += 1;
-            UI_UpdateOverallWorkerNumber();
+            UI_UpdateWorkerNumber();
             CalcNewWorkerCost();
         }
         else if (numOverallWorker == maxWorkerNum)
@@ -121,7 +114,7 @@ public class ProductionManager : MonoBehaviour
         {
             numOverallWorker -= 1;
             numAvailableWorker -= 1;
-            UI_UpdateOverallWorkerNumber();
+            UI_UpdateWorkerNumber();
             
         } else if (numOverallWorker == minWorkerNum)
         {
@@ -138,16 +131,17 @@ public class ProductionManager : MonoBehaviour
     #endregion
 
     #region Available Worker Functions
+
     public void IncAvailableWorker()
     {
         numAvailableWorker += 1;
-        UI_UpdateOverallWorkerNumber();
+        UI_UpdateWorkerNumber();
     }
 
     public void DecAvailableWorker()
     {
         numAvailableWorker -= 1;
-        UI_UpdateOverallWorkerNumber();
+        UI_UpdateWorkerNumber();
     }
     // Get Property
     public byte NumAvailableWorker { get => numAvailableWorker; }
@@ -204,7 +198,7 @@ public class ProductionManager : MonoBehaviour
         
     }
 
-    private void UI_UpdateOverallWorkerNumber()
+    private void UI_UpdateWorkerNumber()
     {
         UI_WorkerPanel.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = numOverallWorker.ToString() + "\n" + numAvailableWorker.ToString();
     }
@@ -291,7 +285,6 @@ public class ProductionManager : MonoBehaviour
         {
             foreach (Transform Quene_Child in this.transform)
             {
-                Quene_Child.GetComponent<ProductionQuene>().StopAllRoutines();
                 Destroy(Quene_Child.gameObject);
             }
         }

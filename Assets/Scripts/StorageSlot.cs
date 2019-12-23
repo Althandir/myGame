@@ -10,19 +10,13 @@ class StorageSlot
     //staticValues
     static readonly byte s_maxAmount = 100;
     static readonly byte s_minAmount = 0;
-
-    [SerializeField]
-    GameObject SlotNum_UIReference = null;
-    [SerializeField]
-    Image UI_SlotIcon = null;
-    [SerializeField]
-    TextMeshProUGUI UI_SlotText = null;
-    [SerializeField]
-    UI_StorageSlider UI_Slider = null;
-    [SerializeField]
-    Product product = null;
-    [SerializeField]
-    byte amount = 0;
+    [Header("Debug_Values :: Runtime")]
+    [SerializeField] GameObject SlotNum_UIReference = null;
+    [SerializeField] Image UI_SlotIcon = null;
+    [SerializeField] TMP_Text UI_SlotText = null;
+    [SerializeField] UI_StorageSlider UI_Slider = null;
+    [SerializeField] Product product = null;
+    [SerializeField] byte amount = 0;
 
     public Product Product { get => product; set => product = value; }
     public byte Amount { get => amount; set => amount = value; }
@@ -30,6 +24,7 @@ class StorageSlot
     // create reference to UI & connect to specific Icon & disable Icon on Init
     public StorageSlot(GameObject SlotReference)
     {
+        // TODO: Change into Prefab and give References directly in Prefab?
         SlotNum_UIReference = SlotReference;
         UI_SlotIcon = SlotNum_UIReference.transform.GetChild(0).GetComponent<Image>();
         UI_SlotText = SlotNum_UIReference.transform.GetChild(1).GetComponent<TextMeshProUGUI>();

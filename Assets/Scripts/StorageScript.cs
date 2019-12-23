@@ -60,7 +60,7 @@ public class StorageScript : MonoBehaviour
             {
                 Debug.Log(amount + " lost");
                 break;
-                //TODO::try not to lose content
+                //TODO: try not to lose content
             }
         }
     }
@@ -75,7 +75,7 @@ public class StorageScript : MonoBehaviour
             {
                 Debug.Log("Cannot Deduct! Missing " + amount + " " + product.Name);
                 break;
-                //TODO::Abort Deduction :: InformPlayer or Ignore if put on cart
+                //TODO: Abort Deduction :: InformPlayer or Ignore if put on cart
             }
             if (storageSlots[id].Product)
             {

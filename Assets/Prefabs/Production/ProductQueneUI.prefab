@@ -621,7 +621,7 @@ MonoBehaviour:
   m_Direction: 0
   m_MinValue: 0
   m_MaxValue: 100
-  m_WholeNumbers: 1
+  m_WholeNumbers: 0
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
@@ -830,7 +830,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e01acded30ca3d14dad8ec0405979897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  productionReference: {fileID: 0}
+  _Product: {fileID: 0}
+  _ProductionManagerReference: {fileID: 0}
+  _ProductionQueneReference: {fileID: 0}
+  _Icon: {fileID: 0}
+  _TimeText: {fileID: 6465252278457438228}
+  _ProductionProgressBar: {fileID: 0}
+  _AddAssignedWorkerButton: {fileID: 0}
+  _DecAssignedWorkerButton: {fileID: 0}
+  _WorkerNumber: {fileID: 0}
 --- !u!223 &6008050293440350199
 Canvas:
   m_ObjectHideFlags: 0
@@ -954,7 +962,7 @@ GameObject:
   - component: {fileID: 6465252278457438229}
   - component: {fileID: 6465252278457438228}
   m_Layer: 0
-  m_Name: 'Text '
+  m_Name: 'TimeText '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1261,12 +1269,12 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 18
+  m_fontSize: 24.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 12
-  m_fontSizeMax: 18
+  m_fontSizeMax: 50
   m_fontStyle: 0
   m_textAlignment: 514
   m_characterSpacing: 0

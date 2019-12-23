@@ -911,15 +911,17 @@ MonoBehaviour:
   ProductQuenePrefab: {fileID: 408057554828103878, guid: d41d8508c16428e4ea2f6b59944da264,
     type: 3}
   ProductionScreen: {fileID: 0}
+  BuildingStorage: {fileID: 0}
+  UI_ProductionContent: {fileID: 0}
+  UI_WorkerPanel: {fileID: 0}
+  UI_ProductionQueneList: []
+  ProductionQueneList: []
   buildingType: 0
   productList: []
   numOverallWorker: 0
   numAvailableWorker: 0
   newWorkerCost: 0
   salaryTimer: 0
-  UI_ProductionContent: {fileID: 0}
-  UI_WorkerPanel: {fileID: 0}
-  ProductionSlots: []
 --- !u!1 &95539219
 GameObject:
   m_ObjectHideFlags: 0
@@ -9586,7 +9588,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -41.880066}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -1, y: 735}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1117737696
@@ -13804,7 +13806,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 150, y: 150}
   m_Spacing: {x: 5, y: 5}
-  m_Constraint: 1
+  m_Constraint: 0
   m_ConstraintCount: 4
 --- !u!114 &1460105705
 MonoBehaviour:
@@ -17462,8 +17464,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1929114768}
   m_HandleRect: {fileID: 1929114767}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.8860409
+  m_Value: 0.5000007
+  m_Size: 0.88617206
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

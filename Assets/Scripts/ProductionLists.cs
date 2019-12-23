@@ -7,7 +7,7 @@ public class ProductionLists : MonoBehaviour
 {
     [Header("List of Products to appear ingame. NO DUPLICATES ALLOWED!")]
     
-    static int s_listCounterInitCheck = 0;
+    // static int s_listCounterInitCheck = 0;
     // static int s_listCounterDuplicateCheck = 0;
     static List<Product> s_FarmList = new List<Product>();
     static List<Product> s_WoodcutterList = new List<Product>();
@@ -29,7 +29,7 @@ public class ProductionLists : MonoBehaviour
     static public List<Product> WoodcutterList { get => s_WoodcutterList; }
 
     #region ListCheck
-    /* 
+    /* NOT IN USE ANYMORE
      * ListCheck is unnessesary, beacuse ScriptableObject itself performs the check now
      * 
     
