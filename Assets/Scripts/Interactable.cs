@@ -19,7 +19,7 @@ public class Interactable : MonoBehaviour
 
     void Awake()
     {
-        if (this.gameObject.GetComponent<StorageScript>())
+        if (this.gameObject.GetComponent<StorageManager>())
         {
             _type = InteractableType.Storage;
         }
@@ -42,7 +42,7 @@ public class Interactable : MonoBehaviour
         {
             case InteractableType.Storage:
                 {
-                    GetComponent<StorageScript>().OnClick();
+                    GetComponent<StorageManager>().OnClick();
                     break;
                 }
             case InteractableType.Production:

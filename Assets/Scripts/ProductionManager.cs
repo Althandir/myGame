@@ -14,14 +14,14 @@ public class ProductionManager : MonoBehaviour
     
     [Header("Reference to the Prefabs of the ProductionQuene")]
     [SerializeField] GameObject UI_ProductQuenePrefab = null;
-    [SerializeField] GameObject ProductQuenePrefab = null;
+    [SerializeField] GameObject _ProductQuenePrefab = null;
     [Header("Debug_Values :: OnAwake")]
-    [SerializeField] Transform ProductionScreen;
-    [SerializeField] StorageScript BuildingStorage;
+    [SerializeField] Transform _ProductionScreen;
+    [SerializeField] StorageManager _BuildingStorage;
     [SerializeField] Transform UI_ProductionContent = null;
     [SerializeField] Transform UI_WorkerPanel = null;
     [SerializeField] List<GameObject> UI_ProductionQueneList;
-    [SerializeField] List<GameObject> ProductionQueneList;
+    [SerializeField] List<GameObject> _ProductionQueneList;
     [Header("Debug_Values :: Runtime")]
     [SerializeField] BuildingType buildingType;
     [SerializeField] List<Product> productList;
@@ -36,15 +36,15 @@ public class ProductionManager : MonoBehaviour
     {
         // TODO: Maybe giving References directly in finished Prefab?
         // Link to UI                                Building    Camera      Screen
-        ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
-        UI_ProductionContent = ProductionScreen.GetChild(2).GetChild(0);
-        UI_WorkerPanel = ProductionScreen.GetChild(3);
+        _ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
+        UI_ProductionContent = _ProductionScreen.GetChild(2).GetChild(0);
+        UI_WorkerPanel = _ProductionScreen.GetChild(3);
 
         // Link to Storage
-        BuildingStorage = this.transform.parent.GetChild(4).GetComponent<StorageScript>();
+        _BuildingStorage = this.transform.parent.GetChild(4).GetComponent<StorageManager>();
         // Init List
         UI_ProductionQueneList = new List<GameObject>();
-        ProductionQueneList = new List<GameObject>();
+        _ProductionQueneList = new List<GameObject>();
     }
 
     private void Start()
@@ -72,7 +72,7 @@ public class ProductionManager : MonoBehaviour
         UI_UpdateWorkerPrice();
 
         // Disable UI
-        ProductionScreen.gameObject.SetActive(false);
+        _ProductionScreen.gameObject.SetActive(false);
     }
     #endregion
 
@@ -240,19 +240,19 @@ public class ProductionManager : MonoBehaviour
 
                 // Init UI_ProductionQuene & ProductionQuene by linking each other
                 _UI_ProductionQuene.Init(_ProductionQuene, product, this);
-                _ProductionQuene.Init(_UI_ProductionQuene, product, this);
+                _ProductionQuene.Init(_UI_ProductionQuene, product, _BuildingStorage, this);
             }
         }
     }
     private ProductionQuene _Instantiate_ProductionQuene(Product product)
     {
         const string ProductionQueneName = "ProductionQuene (";
-        GameObject ProductionQuene = Instantiate(ProductQuenePrefab, this.transform);
+        GameObject ProductionQuene = Instantiate(_ProductQuenePrefab, this.transform);
         ProductionQuene.name = ProductionQueneName + productList.IndexOf(product) + ")";
         ProductionQuene _ProductionQueneScriptRef = ProductionQuene.GetComponent<ProductionQuene>();
 
         // Adds ProductSlot into List<ProductionQuene> to be referenced
-        ProductionQueneList.Add(ProductionQuene);
+        _ProductionQueneList.Add(ProductionQuene);
 
         return _ProductionQueneScriptRef;
     }
@@ -293,8 +293,8 @@ public class ProductionManager : MonoBehaviour
     public void OnClick()
     {
         // Display Production.GUI
-        if (!ProductionScreen.gameObject.activeSelf)
-            ProductionScreen.gameObject.SetActive(true);
+        if (!_ProductionScreen.gameObject.activeSelf)
+            _ProductionScreen.gameObject.SetActive(true);
     }
 
 }

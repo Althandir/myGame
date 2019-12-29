@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Interactable))]
 
-public class StorageScript : MonoBehaviour
+public class StorageManager : MonoBehaviour
 {
     [Header("Storage Options:")]
     [Tooltip("Amount of Slots this Storage has. Keep in Sync with StorageSlots in UI")]
@@ -33,7 +33,11 @@ public class StorageScript : MonoBehaviour
         StorageScreen.SetActive(false); 
     }
     #region Inserting & Deducting Functions
-    // Inserting from Slot no.0 to x
+/// <summary>
+/// Inserting Product with amount from Slot [0] to [x] 
+/// </summary>
+/// <param name="product"></param>
+/// <param name="amount"></param>
     public void InsertProduct(Product product, byte amount)
     {
         byte id = 0;
@@ -56,7 +60,7 @@ public class StorageScript : MonoBehaviour
             }
             id += 1; //get next Slot
 
-            if (id == storageSlots.Length) // is is f.e. = 4 which is equals the lenght of array
+            if (id == storageSlots.Length) 
             {
                 Debug.Log(amount + " lost");
                 break;
@@ -112,13 +116,14 @@ public class StorageScript : MonoBehaviour
             StorageScreen.SetActive(true);
         // Test for Apple
         // Working as intended!
-        
+        /*
         Product product = ProductionLists.FarmList[0];
         Product product2 = ProductionLists.FarmList[3];
         InsertProduct(product, 20);
         
         DeductProduct(product, 10);
         InsertProduct(product2, 23);
+        */
         //Debug.Log(this);
 
     }

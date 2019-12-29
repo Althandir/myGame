@@ -36,6 +36,11 @@ class StorageSlot
         UI_Slider.Init(s_minAmount, s_maxAmount);
     }
     
+    /// <summary>
+    /// Sets the Product of this Slot and inserts the given amount
+    /// </summary>
+    /// <param name="product">Scriptable Object of type Product</param>
+    /// <param name="amount">Amount to be inserted</param>
     public void SetProduct(Product product, byte amount)
     {
         this.product = product;
@@ -43,18 +48,22 @@ class StorageSlot
         _UpdateSlot();
     }
 
+    /// <summary>
+    /// Adding one Item of the defined Product into this Slot
+    /// </summary>
+    /// <returns>false if Max/Min Amount reached, true if successful</returns>
     public bool AddProduct()
     {
         if (amount >= s_maxAmount )
         {
             amount = s_maxAmount;
-//            Debug.Log("Max Amount reached!");
+            // Debug.Log("Max Amount reached!");
             this._UpdateSlot();
             return false;
         } else if (amount <= s_minAmount)
         {
             amount = s_minAmount;
-//            Debug.Log("Min Amount reached!");
+            // Debug.Log("Min Amount reached!");
             this._UpdateSlot();
             return false;
         } else
@@ -65,19 +74,23 @@ class StorageSlot
         }
     }
 
+    /// <summary>
+    /// Decrements one Item of the defined Product from this Slot
+    /// </summary>
+    /// <returns>false if Min Amount reached, true if successful</returns>
     public bool DecProduct()
     {
         if (amount <= s_minAmount)
         {
             amount = s_minAmount;
-//          Debug.Log("Min Amount reached!");
+            // Debug.Log("Min Amount reached!");
             this._UpdateSlot();
             return false;
         }
         else 
         {
             this.amount -= 1;
-            //          Debug.Log("Took one " + product.GetName());
+            // Debug.Log("Took one " + product.GetName());
             this._UpdateSlot();
             return true;
         }

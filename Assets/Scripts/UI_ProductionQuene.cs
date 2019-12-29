@@ -61,8 +61,9 @@ public class UI_ProductionQuene : MonoBehaviour
     /// <param name="number"></param>
     public void Update_ProgessBar(float number)
     {
-        _ProductionProgressBar.value = number;
-        _TimeText.text = number.ToString();
+        float value = (float) System.Math.Round((decimal)number, 2);
+        _ProductionProgressBar.value = value;
+        _TimeText.text = value.ToString() + " | " + _Product.NeededProductionTime;
     }
     #endregion
 

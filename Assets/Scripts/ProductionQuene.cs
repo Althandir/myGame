@@ -11,6 +11,7 @@ public class ProductionQuene : MonoBehaviour
     [SerializeField] byte _NumAssignedWorker;
     [SerializeField] Product _Product;
     [SerializeField] ProductionManager _ProductionManagerRef;
+    [SerializeField] StorageManager _StorageManagerRef;
     [SerializeField] UI_ProductionQuene _UI_ProductionQueneRef;
     [SerializeField] float _ProductionTimer;
 
@@ -29,13 +30,14 @@ public class ProductionQuene : MonoBehaviour
     }
     #endregion
 
-    public void Init(UI_ProductionQuene UI_ProductionQueneRef, Product product, ProductionManager ProductionManagerRef)
+    public void Init(UI_ProductionQuene UI_ProductionQueneRef, Product product, StorageManager storageManagerRef, ProductionManager productionManagerRef)
     {
         if (!_isInit)
         {
             _UI_ProductionQueneRef = UI_ProductionQueneRef;
-            _ProductionManagerRef = ProductionManagerRef;
             _Product = product;
+            _StorageManagerRef = storageManagerRef;
+            _ProductionManagerRef = productionManagerRef;
 
             _Coroutine_Produce = Produce();
             _Coroutine_Timer = ProductionTimeSystem();
@@ -173,8 +175,9 @@ public class ProductionQuene : MonoBehaviour
                         {
                             // TODO: Take needed Ressources from Storage & Set Error if no Ressources available
 
-                            // TODO: Generate Product
                             Debug.Log(_Product.Name + " produced in " + _Product.NeededProductionTime + " Seconds.");
+                            // TODO: change Insert into a bool func & amount shouldn't be _NumAssignedWorker
+                            _StorageManagerRef.InsertProduct(_Product, _NumAssignedWorker);
                             ResetProductionTimer();
                         }
                         break;

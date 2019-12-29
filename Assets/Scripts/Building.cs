@@ -12,14 +12,22 @@ public class Building : MonoBehaviour
     [SerializeField]
     ProductionManager SelfProductionReference = null;
     [SerializeField]
-    StorageScript SelfStorageReference = null;
+    StorageManager SelfStorageReference = null;
 
     void Awake()
     {
-        SelfStorageReference = transform.GetChild(4).GetComponent<StorageScript>();
+        SelfStorageReference = transform.GetChild(4).GetComponent<StorageManager>();
         SelfProductionReference = transform.GetChild(5).GetComponent<ProductionManager>();
     }
-
+    /// <summary>
+    /// TODO: Delete Debugfunction. Just for Builds now.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Start()
+    {
+        yield return new WaitForSeconds(2);
+        ChangeType();
+    }
     // Works as Intended!
     [ContextMenu("Cycle Type")]
     void ChangeType()
