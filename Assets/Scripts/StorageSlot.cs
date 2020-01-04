@@ -8,7 +8,7 @@ using TMPro;
 class StorageSlot
 {
     //staticValues
-    static readonly byte s_maxAmount = 100;
+    static readonly byte s_maxAmount = 200;
     static readonly byte s_minAmount = 0;
     [Header("Debug_Values :: Runtime")]
     [SerializeField] GameObject SlotNum_UIReference = null;
@@ -37,15 +37,12 @@ class StorageSlot
     }
     
     /// <summary>
-    /// Sets the Product of this Slot and inserts the given amount
+    /// Sets the Product of this Slot
     /// </summary>
     /// <param name="product">Scriptable Object of type Product</param>
-    /// <param name="amount">Amount to be inserted</param>
-    public void SetProduct(Product product, byte amount)
+    public void SetProduct(Product product)
     {
         this.product = product;
-        this.amount = amount;
-        _UpdateSlot();
     }
 
     /// <summary>
@@ -60,13 +57,8 @@ class StorageSlot
             // Debug.Log("Max Amount reached!");
             this._UpdateSlot();
             return false;
-        } else if (amount <= s_minAmount)
-        {
-            amount = s_minAmount;
-            // Debug.Log("Min Amount reached!");
-            this._UpdateSlot();
-            return false;
-        } else
+        } 
+        else
         {
             this.amount += 1;
             this._UpdateSlot();

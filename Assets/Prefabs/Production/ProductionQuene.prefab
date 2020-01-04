@@ -43,8 +43,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b4af58995f04a64cb4ae8d5adbcebe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInit: 0
-  hasError: 0
-  NumAssignedWorker: 0
-  ProductionRef: {fileID: 0}
-  UI_ProductionSlotRef: {fileID: 0}
+  _isInit: 0
+  _hasError: 0
+  _NumAssignedWorker: 0
+  _Product: {fileID: 0}
+  _ProductionManagerRef: {fileID: 0}
+  _StorageManagerRef: {fileID: 0}
+  _UI_ProductionQueneRef: {fileID: 0}
+  _ProductionTimer: 0
+  _overflowAmount: 0
+  _RequirementList:
+  - requirement:
+      _RequiredProduct: {fileID: 0}
+      _RequiredAmount: 0
+    fullfilled: 0
+  _ProductionActive: 0
+  _ProductionTimerActive: 0

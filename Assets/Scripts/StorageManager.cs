@@ -33,24 +33,33 @@ public class StorageManager : MonoBehaviour
         StorageScreen.SetActive(false); 
     }
     #region Inserting & Deducting Functions
-/// <summary>
-/// Inserting Product with amount from Slot [0] to [x] 
-/// </summary>
-/// <param name="product"></param>
-/// <param name="amount"></param>
-    public void InsertProduct(Product product, byte amount)
+    /// <summary>
+    /// Inserting Product with amount from Slot [0] to [x] 
+    /// Returns the Amount which could not inserted into a slot
+    /// </summary>
+    /// <param name="product"></param>
+    /// <param name="amount"></param>
+    /// <returns>the amount left</returns>
+    public byte InsertProduct(Product product, byte amount)
     {
         byte id = 0;
         while (amount != 0)
         {
             if (!storageSlots[id].Product) // insert into empty
             {
-                storageSlots[id].SetProduct(product, amount);
-                break;
+                storageSlots[id].SetProduct(product); // Sets the Product of the Slot
+                // TODO: Delete duplicated Code
+                for (int i = 0; i != amount; amount -= 1) //adds Product amount times
+                {
+                    if (!storageSlots[id].AddProduct()) //if adding fails then:
+                    {
+                        break;
+                    }
+                };
             }
             else if (storageSlots[id].Product.Equals(product)) // insert into existing
             {
-                for (int i = 0; i != amount; amount--) //adds Product amount times
+                for (int i = 0; i != amount; amount -= 1) //adds Product amount times
                 {
                     if (!storageSlots[id].AddProduct()) //if adding fails then:
                     {
@@ -62,40 +71,49 @@ public class StorageManager : MonoBehaviour
 
             if (id == storageSlots.Length) 
             {
-                Debug.Log(amount + " lost");
+                // Debug.Log(amount + " lost");
                 break;
                 //TODO: try not to lose content
             }
         }
+        return amount;
     }
 
-    //Deducting from Slot no.x to 0
-    public void DeductProduct(Product product, byte amount)
+    /// <summary>
+    /// Deducting from Slot [x] to [0]
+    /// Returns true, if Storage could deduct the product by 1 amount times.
+    /// Returns false, if Storage doesn't has enough of the product
+    /// </summary>
+    public bool DeductProduct(Product product, byte requestedAmount)
     {
         int id = storageSlots.Length-1;
-        while (amount != 0)
+        while (requestedAmount != 0)
         {
             if (id == -1)
             {
-                Debug.Log("Cannot Deduct! Missing " + amount + " " + product.Name);
-                break;
-                //TODO: Abort Deduction :: InformPlayer or Ignore if put on cart
+                Debug.Log("Cannot Deduct! Missing " + requestedAmount + " " + product.Name);
+                return false;
             }
-            if (storageSlots[id].Product)
+            if (storageSlots[id].Product) // Slot is holding a Product
             {
-                if (storageSlots[id].Product.Equals(product)) // deduct
+                if (storageSlots[id].Product.Equals(product)) // Storage has requested Product
                 {
-                    for (int i = 0; i != amount; amount--) //deduct Product amount times
+                    if (storageSlots[id].Amount >= requestedAmount) // Storage holds enought of this Product
                     {
-                        if (!storageSlots[id].DecProduct()) //if deducting fails then:
+                        for (int i = 0; i != requestedAmount; requestedAmount--) //deduct Product amount times
                         {
-                            break;
-                        }
-                    };
+                            if (!storageSlots[id].DecProduct()) //if deducting fails then:
+                            {
+                                return false;
+                            }
+                        };
+                    }
                 }
             }
             id -= 1; //get next Slot
         }
+        // Deducting successful!
+        return true;
     }
     #endregion
 

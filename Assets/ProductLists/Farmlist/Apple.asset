@@ -20,3 +20,7 @@ MonoBehaviour:
   _MinPrice: 2
   _MaxPrice: 6
   _NeededProductionTime: 2.5
+  _RequiredProducts:
+  - {fileID: 11400000, guid: 592cb1e5ae5a58f43b6f2939e45470f2, type: 2}
+  - {fileID: 11400000, guid: da4da95d53b839b4a85d23f6070d28b2, type: 2}
+  _RequiredAmount: 0301

@@ -35,7 +35,7 @@ public class RayCastToCursor : MonoBehaviour
     {
         //Debug for Clicking on GameObject
         Transform objectHit = raycastHit.transform;
-        Debug.Log("You clicked on " + objectHit.gameObject.ToString());
+        //Debug.Log("You clicked on " + objectHit.gameObject.ToString());
     }
 
 

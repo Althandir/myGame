@@ -22,6 +22,8 @@ public class ProductionManager : MonoBehaviour
     [SerializeField] Transform UI_WorkerPanel = null;
     [SerializeField] List<GameObject> UI_ProductionQueneList;
     [SerializeField] List<GameObject> _ProductionQueneList;
+    [SerializeField] Button UI_IncreaseOverallWorkerButton;
+    [SerializeField] Button UI_DecreaseOverallWorkerButton;
     [Header("Debug_Values :: Runtime")]
     [SerializeField] BuildingType buildingType;
     [SerializeField] List<Product> productList;
@@ -39,6 +41,11 @@ public class ProductionManager : MonoBehaviour
         _ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
         UI_ProductionContent = _ProductionScreen.GetChild(2).GetChild(0);
         UI_WorkerPanel = _ProductionScreen.GetChild(3);
+
+        UI_IncreaseOverallWorkerButton = UI_WorkerPanel.GetChild(0).GetChild(0).GetComponent<Button>();
+        UI_DecreaseOverallWorkerButton = UI_WorkerPanel.GetChild(0).GetChild(1).GetComponent<Button>();
+        UI_IncreaseOverallWorkerButton.onClick.AddListener(IncreaseOverallWorker);
+        UI_DecreaseOverallWorkerButton.onClick.AddListener(DecreaseOverallWorker);
 
         // Link to Storage
         _BuildingStorage = this.transform.parent.GetChild(4).GetComponent<StorageManager>();
@@ -91,39 +98,86 @@ public class ProductionManager : MonoBehaviour
     #region Functions for Worker
     
     #region Overall
-    public void IncOverallWorker()
+    public void IncreaseOverallWorker()
     {
-        // max 99
-        if (numOverallWorker <= maxWorkerNum)
+        // TODO: Delete duplicated Code
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            numOverallWorker += 1;
-            numAvailableWorker += 1;
-            UI_UpdateWorkerNumber();
-            CalcNewWorkerCost();
+            for (int i = 0; i < 5; i++)
+            {
+                // max 99
+                if (numOverallWorker <= maxWorkerNum)
+                {
+                    numOverallWorker += 1;
+                    numAvailableWorker += 1;
+                    UI_UpdateWorkerNumber();
+                    CalcNewWorkerCost();
+                }
+                else if (numOverallWorker == maxWorkerNum)
+                {
+                    Debug.LogWarning("Max amount of Worker reached!");
+                }
+            }
         }
-        else if (numOverallWorker == maxWorkerNum)
+        else
         {
-            Debug.LogWarning("Max amount of Worker reached!");
+            // max 99
+            if (numOverallWorker <= maxWorkerNum)
+            {
+                numOverallWorker += 1;
+                numAvailableWorker += 1;
+                UI_UpdateWorkerNumber();
+                CalcNewWorkerCost();
+            }
+            else if (numOverallWorker == maxWorkerNum)
+            {
+                Debug.LogWarning("Max amount of Worker reached!");
+            }
         }
+        
     }
 
-    public void DecOverallWorker()
+    public void DecreaseOverallWorker()
     {
-        // min 0
-        if (numOverallWorker >= minWorkerNum && numAvailableWorker != 0)
+        // TODO: Delete duplicated Code
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            numOverallWorker -= 1;
-            numAvailableWorker -= 1;
-            UI_UpdateWorkerNumber();
-            
-        } else if (numOverallWorker == minWorkerNum)
-        {
-            Debug.LogWarning("Min amount of Worker reached!");
+            // min 0
+            if (numOverallWorker >= minWorkerNum && numAvailableWorker != 0)
+            {
+                numOverallWorker -= 1;
+                numAvailableWorker -= 1;
+                UI_UpdateWorkerNumber();
+
+            }
+            else if (numOverallWorker == minWorkerNum)
+            {
+                Debug.LogWarning("Min amount of Worker reached!");
+            }
+            else if (numAvailableWorker == 0)
+            {
+                Debug.LogWarning("No unassigned Worker to fire!");
+            }
         }
-        else if (numAvailableWorker == 0)
+        else
         {
-            Debug.LogWarning("No unassigned Worker to fire!");
+            if (numOverallWorker >= minWorkerNum && numAvailableWorker != 0)
+            {
+                numOverallWorker -= 1;
+                numAvailableWorker -= 1;
+                UI_UpdateWorkerNumber();
+
+            }
+            else if (numOverallWorker == minWorkerNum)
+            {
+                Debug.LogWarning("Min amount of Worker reached!");
+            }
+            else if (numAvailableWorker == 0)
+            {
+                Debug.LogWarning("No unassigned Worker to fire!");
+            }
         }
+        
     }
     // Get Property
     public byte NumOverallWorker { get => numOverallWorker; }
@@ -176,7 +230,7 @@ public class ProductionManager : MonoBehaviour
         else if (productList != null)
         {
             // Spawn ProductionSlot & Linking to UI
-            CreateAllProductionSlots();
+            CreateAllProductionQuenes();
         }
     }
     #endregion
@@ -210,7 +264,7 @@ public class ProductionManager : MonoBehaviour
 
     #endregion
     
-    private void CreateAllProductionSlots()
+    private void CreateAllProductionQuenes()
     {
         if (!UI_ProductQuenePrefab)
         {
@@ -218,8 +272,7 @@ public class ProductionManager : MonoBehaviour
         }
         else
         {
-
-            #region calcBackgroundSize
+            #region BackgroundSizeValues
             // Get values for Background Size
             float _prefabHeight = UI_ProductQuenePrefab.GetComponent<RectTransform>().rect.height;
             float _verticalLayoutSpacing = UI_ProductionContent.GetComponent<VerticalLayoutGroup>().spacing;
@@ -234,13 +287,18 @@ public class ProductionManager : MonoBehaviour
 
                 // Create ProductionQuene UI
                 UI_ProductionQuene _UI_ProductionQuene = _Instantiate_UI_ProductionQuene(product);
-
+                
                 // Create new ProductionQuene 
                 ProductionQuene _ProductionQuene = _Instantiate_ProductionQuene(product);
 
-                // Init UI_ProductionQuene & ProductionQuene by linking each other
+                // Better? Waits for EndofFrame so Awake is called
+                StartCoroutine(_InitQuene(_UI_ProductionQuene, _ProductionQuene, product));
+                
+                /*
                 _UI_ProductionQuene.Init(_ProductionQuene, product, this);
                 _ProductionQuene.Init(_UI_ProductionQuene, product, _BuildingStorage, this);
+                */
+                
             }
         }
     }
@@ -277,6 +335,15 @@ public class ProductionManager : MonoBehaviour
         return UI_ProductQuene.GetComponent<UI_ProductionQuene>();
     }
 
+    /// <summary>
+    /// // Init UI_ProductionQuene & ProductionQuene by linking each other
+    /// </summary>
+    private IEnumerator _InitQuene(UI_ProductionQuene UI, ProductionQuene quene, Product product)
+    {
+        yield return new WaitForEndOfFrame();
+        quene.Init(UI, product, _BuildingStorage, this);
+        UI.Init(quene, product, this);
+    }
 
     // Checks for any Quene as Child of this transform and destroys them
     private void ResetProductionQuene()

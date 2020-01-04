@@ -20,3 +20,5 @@ MonoBehaviour:
   _MinPrice: 4
   _MaxPrice: 12
   _NeededProductionTime: 2.25
+  _RequiredProducts: []
+  _RequiredAmount: 

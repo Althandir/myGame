@@ -15,6 +15,12 @@ public class ProductionQuene : MonoBehaviour
     [SerializeField] UI_ProductionQuene _UI_ProductionQueneRef;
     [SerializeField] float _ProductionTimer;
 
+    [SerializeField] byte overflowAmount = 0;
+    [SerializeField] bool _hasResources;
+    [SerializeField] bool[] _RequirementFullfilled;
+
+    // TODO: keeping fullfilled, amount & product in one single class 
+
     private IEnumerator _Coroutine_Produce;
     [SerializeField] bool _ProductionActive = false;
     private IEnumerator _Coroutine_Timer;
@@ -39,6 +45,8 @@ public class ProductionQuene : MonoBehaviour
             _StorageManagerRef = storageManagerRef;
             _ProductionManagerRef = productionManagerRef;
 
+            _RequirementFullfilled = new bool[_Product.RequiredProducts.Length];
+            
             _Coroutine_Produce = Produce();
             _Coroutine_Timer = ProductionTimeSystem();
 
@@ -65,7 +73,6 @@ public class ProductionQuene : MonoBehaviour
         else if (_NumAssignedWorker > 0)
         {
             ProductionRoutineStart();
-            ProductionTimerStart();
         }
     }
 
@@ -76,12 +83,11 @@ public class ProductionQuene : MonoBehaviour
         {
             _ProductionTimerActive = true;
             StartCoroutine(_Coroutine_Timer);
-            Debug.Log("Coroutine ProductionTimer in " + gameObject.name + " started!");
-        }
+        }/*
         else
         {
-            Debug.LogWarning("Couroutine ProductionTimer in " + gameObject.name + " already started!");
-        }
+            Debug.LogWarning("Coroutine ProductionTimer in " + gameObject.name + " already started!");
+        }*/
     }
     void ProductionTimerStop()
     {
@@ -91,11 +97,11 @@ public class ProductionQuene : MonoBehaviour
             _ProductionTimerActive = false;
             Debug.Log("Coroutine ProductionTimer in " + gameObject.name + " stopped!");
             ResetProductionTimer();
-        }
+        }/*
         else
         {
             Debug.LogWarning("Tried to stop Coroutine ProductionTimer in " + gameObject.name + "!");
-        }
+        }*/
     }
     #endregion
 
@@ -136,10 +142,12 @@ public class ProductionQuene : MonoBehaviour
             _ProductionActive = false;
             Debug.Log("Coroutine Produce in " + gameObject.name + " stopped!");
         }
+        /*
         else
         {
             Debug.LogWarning("Tried to stop Coroutine Produce in " + gameObject.name + "!");
         }
+        */
     }
     /// <summary>
     /// Starts the Coroutine "Produce()" when inactive and sets its bool to true;
@@ -150,13 +158,13 @@ public class ProductionQuene : MonoBehaviour
         {
             _ProductionActive = true;
             StartCoroutine(_Coroutine_Produce);
-            Debug.Log("Couroutine Produce in " + gameObject.name + " started!");
         }
+        /*
         else
         {
             Debug.LogWarning("Couroutine Produce in " + gameObject.name + " already started!");
         }
-
+        */
     }
     #endregion
 
@@ -165,31 +173,79 @@ public class ProductionQuene : MonoBehaviour
     {
         while (true)
         {
+            // TODO: Design this better!!!! Horrible Layout but working :(
+            if (!CheckAllRequirements())
+            {
+                _hasError = ProductionError.yes_NoRessources;
+            }
+            else
+            {
+                _hasResources = true;
+            }
+
             // Check if there is an Error
             switch (_hasError)
             {
                 case ProductionError.no: 
                     {
+                        ProductionTimerStart();
                         // Check if Timer is completed
-                        if (_ProductionTimer >= _Product.NeededProductionTime)
+                        if (_ProductionTimer >= _Product.NeededProductionTime && _hasResources)
                         {
-                            // TODO: Take needed Ressources from Storage & Set Error if no Ressources available
-
+                            // TODO: Amount shouldn't be _NumAssignedWorker
                             Debug.Log(_Product.Name + " produced in " + _Product.NeededProductionTime + " Seconds.");
-                            // TODO: change Insert into a bool func & amount shouldn't be _NumAssignedWorker
-                            _StorageManagerRef.InsertProduct(_Product, _NumAssignedWorker);
+                            
+                            overflowAmount = _StorageManagerRef.InsertProduct(_Product, _NumAssignedWorker);
+                            ResetRequirements();
+
+                            if (overflowAmount > 0 )
+                            {
+                                // Inserting failed because Storage is full!
+                                _hasError = ProductionError.yes_StorageFull;
+                            } 
                             ResetProductionTimer();
                         }
                         break;
                     }
                 case ProductionError.yes_NoRessources:
                     {
+                        // Timer to prevent Spam of the Storage
+                        yield return new WaitForSecondsRealtime(1);
+
+                        TryFullfillRequirements();
+                        if (CheckAllRequirements())
+                        {
+                            _hasError = ProductionError.no;
+                            _hasResources = true;
+                            ProductionTimerStart();
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Could not start Production, due to lack of needed Ressources");
+                        }
+
                         // TODO: Display Error UI
+
+                        ProductionTimerStop();
                         break;
                     }
                 case ProductionError.yes_StorageFull:
                     {
+                        // Timer to prevent Spam of the Storage
+                        yield return new WaitForSecondsRealtime(1);
+                        overflowAmount = TryInsertOverflowAmount(overflowAmount);
+                        if (overflowAmount == 0)
+                        {
+                            _hasError = ProductionError.no;
+                            Debug.Log("Overflow inserted!");
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Storage Full! " + _StorageManagerRef.transform.parent.name);
+                        }
                         // TODO: Display Error UI
+
+                        ProductionTimerStop();
                         break;
                     }
                 default:
@@ -200,6 +256,49 @@ public class ProductionQuene : MonoBehaviour
             }
             yield return null; // Prevents full freeze of Engine
         }
+    }
+
+    bool CheckAllRequirements()
+    {
+        if (_RequirementFullfilled.Length > 0)
+        {
+            foreach (bool value in _RequirementFullfilled)
+            {
+                if (!value)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void TryFullfillRequirements()
+    {
+        if (_RequirementFullfilled.Length > 0)
+        {
+            for (int i = 0; i < _RequirementFullfilled.Length; i++)
+            {
+                if (_StorageManagerRef.DeductProduct(_Product.RequiredProducts[i], _Product.RequiredAmount[i]))
+                {
+                    _RequirementFullfilled[i] = true;
+                }
+            }
+        }
+    }
+
+    void ResetRequirements()
+    {
+        for (int i = 0; i < _RequirementFullfilled.Length; i++)
+        {
+            _RequirementFullfilled[i] = false;
+        }
+        _hasResources = false;
+    }
+
+    byte TryInsertOverflowAmount(byte overflowAmount)
+    {
+        return _StorageManagerRef.InsertProduct(_Product, overflowAmount);
     }
     #endregion
 
@@ -234,11 +333,12 @@ public class ProductionQuene : MonoBehaviour
             _NumAssignedWorker -= 1;
             _ProductionManagerRef.IncAvailableWorker();
             AssignedWorkerCheck();
-        }
+        }/*
         else
         {
             Debug.LogWarning("Parent does not have enough available Worker!");
         }
+        */
     }
     #endregion
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 /// <summary>
 /// Links UI_Slot to ProductionSlot. 
 /// </summary>
@@ -47,13 +48,7 @@ public class UI_ProductionQuene : MonoBehaviour
             Debug.LogError("Something went wrong during Button linking!");
         }
     }
-
-    public void Update_FullUI()
-    {
-        // TODO: finish Update_FullUI
-        
-    }
-
+    
     #region Update of ProductionProgressBar
     /// <summary>
     /// Sets the slider and the text of the ProductionProgessBar to the given number
@@ -82,7 +77,17 @@ public class UI_ProductionQuene : MonoBehaviour
     /// </summary>
     void IncrementAssignedWorker()
     {
-        _ProductionQueneReference.IncAssignedWorker();
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                _ProductionQueneReference.IncAssignedWorker();
+            }
+        }
+        else
+        {
+            _ProductionQueneReference.IncAssignedWorker();
+        }
         Update_AssignedWorkerNumber();      
     }
 
@@ -92,20 +97,30 @@ public class UI_ProductionQuene : MonoBehaviour
     /// </summary>
     void DecrementAssignedWorker()
     {
-        _ProductionQueneReference.DecAssignedWorker();
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                _ProductionQueneReference.DecAssignedWorker();
+            }
+        }
+        else
+        {
+            _ProductionQueneReference.DecAssignedWorker();
+        }
         Update_AssignedWorkerNumber();
     }
     #endregion
-
+    
     #region Init function
     public void Init(ProductionQuene productionQueneRef, Product product, ProductionManager productionManagerRef)
     {
         _Product = product;
         _ProductionManagerReference = productionManagerRef;
         _ProductionQueneReference = productionQueneRef;
-
-        // Inital Update of the UI
-        Update_FullUI();
     }
     #endregion
+
+    
+
 }
