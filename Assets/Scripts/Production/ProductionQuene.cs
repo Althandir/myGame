@@ -15,11 +15,7 @@ public class ProductionQuene : MonoBehaviour
     [SerializeField] UI_ProductionQuene _UI_ProductionQueneRef;
     [SerializeField] float _ProductionTimer;
 
-    [SerializeField] byte overflowAmount = 0;
-    [SerializeField] bool _hasResources;
-    [SerializeField] bool[] _RequirementFullfilled;
-
-    // TODO: keeping fullfilled, amount & product in one single class 
+    [SerializeField] List<ProductionRequirement> _ProductionRequirements;
 
     private IEnumerator _Coroutine_Produce;
     [SerializeField] bool _ProductionActive = false;
@@ -28,11 +24,12 @@ public class ProductionQuene : MonoBehaviour
     //private ProductionError hasError { get => _hasError; set => _hasError = value; }
 
     public byte NumAssignedWorker { get => _NumAssignedWorker; }
+    public List<ProductionRequirement> ProductionRequirements { get => _ProductionRequirements; }
 
     #region Definition of Error
     private enum ProductionError
     {
-        no, yes_NoRessources, yes_StorageFull
+        no, yes_NoRessources
     }
     #endregion
 
@@ -45,10 +42,11 @@ public class ProductionQuene : MonoBehaviour
             _StorageManagerRef = storageManagerRef;
             _ProductionManagerRef = productionManagerRef;
 
-            _RequirementFullfilled = new bool[_Product.RequiredProducts.Length];
-            
+            CreateProductionRequirements();
+
             _Coroutine_Produce = Produce();
             _Coroutine_Timer = ProductionTimeSystem();
+
 
             _isInit = true;
         }
@@ -61,6 +59,17 @@ public class ProductionQuene : MonoBehaviour
     public void OnDestroy()
     {
         StopAllCoroutines();
+    }
+
+    /// <summary>
+    /// Creates new Objects to store Requirement with a bool.
+    /// </summary>
+    void CreateProductionRequirements()
+    {
+        foreach (ProductRequirement requirement in _Product.ProductRequirements)
+        {
+            _ProductionRequirements.Add(new ProductionRequirement(requirement));
+        }
     }
 
     void AssignedWorkerCheck()
@@ -140,6 +149,7 @@ public class ProductionQuene : MonoBehaviour
         {
             StopCoroutine(_Coroutine_Produce);
             _ProductionActive = false;
+            ResetFullfilledRequirements();
             Debug.Log("Coroutine Produce in " + gameObject.name + " stopped!");
         }
         /*
@@ -173,84 +183,46 @@ public class ProductionQuene : MonoBehaviour
     {
         while (true)
         {
-            // TODO: Design this better!!!! Horrible Layout but working :(
-            if (!CheckAllRequirements())
+            // try to get required Ressources
+            // if this product has any requirements
+            if (HasAnyRequirements())
             {
-                _hasError = ProductionError.yes_NoRessources;
+                // while there are unfullfilled requirements
+                while (!CheckAllRequirements())
+                {
+                    // try to fullfill them
+                    TryFullfillRequirements();
+                    // prevents Spam of Storage
+                    yield return new WaitForEndOfFrame();
+                }
+                // if fullfilled start the timer
+                ProductionTimerStart();
             }
-            else
+            else 
             {
-                _hasResources = true;
+                // just start the timer
+                ProductionTimerStart();
             }
 
-            // Check if there is an Error
             switch (_hasError)
             {
-                case ProductionError.no: 
+                case ProductionError.no:
                     {
-                        ProductionTimerStart();
-                        // Check if Timer is completed
-                        if (_ProductionTimer >= _Product.NeededProductionTime && _hasResources)
+                        if (_ProductionTimer > _Product.NeededProductionTime / _NumAssignedWorker)
                         {
-                            // TODO: Amount shouldn't be _NumAssignedWorker
-                            Debug.Log(_Product.Name + " produced in " + _Product.NeededProductionTime + " Seconds.");
-                            
-                            overflowAmount = _StorageManagerRef.InsertProduct(_Product, _NumAssignedWorker);
-                            ResetRequirements();
-
-                            if (overflowAmount > 0 )
-                            {
-                                // Inserting failed because Storage is full!
-                                _hasError = ProductionError.yes_StorageFull;
-                            } 
-                            ResetProductionTimer();
+                            CreateProduct();
+                            yield return new WaitForEndOfFrame();
                         }
                         break;
                     }
                 case ProductionError.yes_NoRessources:
                     {
-                        // Timer to prevent Spam of the Storage
-                        yield return new WaitForSecondsRealtime(1);
-
-                        TryFullfillRequirements();
-                        if (CheckAllRequirements())
-                        {
-                            _hasError = ProductionError.no;
-                            _hasResources = true;
-                            ProductionTimerStart();
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Could not start Production, due to lack of needed Ressources");
-                        }
-
-                        // TODO: Display Error UI
-
-                        ProductionTimerStop();
-                        break;
-                    }
-                case ProductionError.yes_StorageFull:
-                    {
-                        // Timer to prevent Spam of the Storage
-                        yield return new WaitForSecondsRealtime(1);
-                        overflowAmount = TryInsertOverflowAmount(overflowAmount);
-                        if (overflowAmount == 0)
-                        {
-                            _hasError = ProductionError.no;
-                            Debug.Log("Overflow inserted!");
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Storage Full! " + _StorageManagerRef.transform.parent.name);
-                        }
-                        // TODO: Display Error UI
-
-                        ProductionTimerStop();
+                        Debug.LogWarning(this.gameObject.name + " has no Resources!");
                         break;
                     }
                 default:
                     {
-                        Debug.LogError("Something went wrong in Produce! " + gameObject.name); ;
+                        Debug.LogError("Something went wrong in Produce() in " + this.gameObject.name);
                         break;
                     }
             }
@@ -258,48 +230,76 @@ public class ProductionQuene : MonoBehaviour
         }
     }
 
+    void CreateProduct()
+    {
+        _StorageManagerRef.InsertProduct(_Product, 1);
+        ResetProductionTimer();
+        ProductionTimerStop();
+        ResetFullfilledRequirements();
+        Debug.Log(_Product.Name + " produced in " + _Product.NeededProductionTime + " Seconds.");
+    }
+
+    /// <summary>
+    /// Checks if this Product has any Requirements to be fullfilled
+    /// </summary>
+    /// <returns></returns>
+    bool HasAnyRequirements()
+    {
+        if (_ProductionRequirements.Count > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if all Requirements for this Product are fullfilled.
+    /// Sets <see cref="_hasError"/> to no or yes_NoRessources.
+    /// </summary>
+    /// <returns></returns>
     bool CheckAllRequirements()
     {
-        if (_RequirementFullfilled.Length > 0)
+        foreach (ProductionRequirement requirement in _ProductionRequirements)
         {
-            foreach (bool value in _RequirementFullfilled)
+            if (!requirement.IsFullfilled)
             {
-                if (!value)
-                {
-                    return false;
-                }
+                _hasError = ProductionError.yes_NoRessources;
+                return false;
             }
         }
+        _hasError = ProductionError.no;
         return true;
     }
 
+    /// <summary>
+    /// Sets all booleans in <see cref="_ProductionRequirements"/> to false.
+    /// </summary>
+    void ResetFullfilledRequirements()
+    {
+        foreach (ProductionRequirement requirement in _ProductionRequirements)
+        {
+            requirement.IsFullfilled = false;
+        }
+        _UI_ProductionQueneRef.UpdateRequirementStatus();
+    }
+
+    /// <summary>
+    /// Accesses Storage and tries to deduct needed Ressources.
+    /// If successfull: IsFullfilled is set to true.
+    /// Else: IsFullfilled is set to false.
+    /// /// </summary>
     void TryFullfillRequirements()
     {
-        if (_RequirementFullfilled.Length > 0)
+        foreach (ProductionRequirement requirement in _ProductionRequirements)
         {
-            for (int i = 0; i < _RequirementFullfilled.Length; i++)
+            if (!requirement.IsFullfilled)
             {
-                if (_StorageManagerRef.DeductProduct(_Product.RequiredProducts[i], _Product.RequiredAmount[i]))
-                {
-                    _RequirementFullfilled[i] = true;
-                }
+                requirement.IsFullfilled = _StorageManagerRef.DeductProduct(requirement.GetProduct(), requirement.GetRequiredAmount());
             }
         }
+        _UI_ProductionQueneRef.UpdateRequirementStatus();
     }
 
-    void ResetRequirements()
-    {
-        for (int i = 0; i < _RequirementFullfilled.Length; i++)
-        {
-            _RequirementFullfilled[i] = false;
-        }
-        _hasResources = false;
-    }
-
-    byte TryInsertOverflowAmount(byte overflowAmount)
-    {
-        return _StorageManagerRef.InsertProduct(_Product, overflowAmount);
-    }
     #endregion
 
     #region Increment & Decrement assigned Worker

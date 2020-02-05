@@ -9,7 +9,7 @@ using TMPro;
 public class ProductionManager : MonoBehaviour
 {
     const byte initWorkerCost = 100;
-    const byte maxWorkerNum = 99;
+    const byte maxWorkerNum = 100;
     const byte minWorkerNum = 0;
     
     [Header("Reference to the Prefabs of the ProductionQuene")]
@@ -24,6 +24,7 @@ public class ProductionManager : MonoBehaviour
     [SerializeField] List<GameObject> _ProductionQueneList;
     [SerializeField] Button UI_IncreaseOverallWorkerButton;
     [SerializeField] Button UI_DecreaseOverallWorkerButton;
+    [SerializeField] ScrollviewContentHeightUpdater UI_ContentHeightUpdater;
     [Header("Debug_Values :: Runtime")]
     [SerializeField] BuildingType buildingType;
     [SerializeField] List<Product> productList;
@@ -39,13 +40,16 @@ public class ProductionManager : MonoBehaviour
         // TODO: Maybe giving References directly in finished Prefab?
         // Link to UI                                Building    Camera      Screen
         _ProductionScreen = this.gameObject.transform.parent.GetChild(0).GetChild(0).GetChild(1);
-        UI_ProductionContent = _ProductionScreen.GetChild(2).GetChild(0);
+        UI_ProductionContent = _ProductionScreen.GetChild(2).GetChild(0).GetChild(0);
         UI_WorkerPanel = _ProductionScreen.GetChild(3);
 
         UI_IncreaseOverallWorkerButton = UI_WorkerPanel.GetChild(0).GetChild(0).GetComponent<Button>();
         UI_DecreaseOverallWorkerButton = UI_WorkerPanel.GetChild(0).GetChild(1).GetComponent<Button>();
         UI_IncreaseOverallWorkerButton.onClick.AddListener(IncreaseOverallWorker);
         UI_DecreaseOverallWorkerButton.onClick.AddListener(DecreaseOverallWorker);
+        
+        UI_ContentHeightUpdater = UI_ProductionContent.GetComponent<ScrollviewContentHeightUpdater>();
+
 
         // Link to Storage
         _BuildingStorage = this.transform.parent.GetChild(4).GetComponent<StorageManager>();
@@ -106,7 +110,7 @@ public class ProductionManager : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 // max 99
-                if (numOverallWorker <= maxWorkerNum)
+                if (numOverallWorker < maxWorkerNum)
                 {
                     numOverallWorker += 1;
                     numAvailableWorker += 1;
@@ -122,7 +126,7 @@ public class ProductionManager : MonoBehaviour
         else
         {
             // max 99
-            if (numOverallWorker <= maxWorkerNum)
+            if (numOverallWorker < maxWorkerNum)
             {
                 numOverallWorker += 1;
                 numAvailableWorker += 1;
@@ -148,7 +152,6 @@ public class ProductionManager : MonoBehaviour
                 numOverallWorker -= 1;
                 numAvailableWorker -= 1;
                 UI_UpdateWorkerNumber();
-
             }
             else if (numOverallWorker == minWorkerNum)
             {
@@ -229,7 +232,7 @@ public class ProductionManager : MonoBehaviour
         }
         else if (productList != null)
         {
-            // Spawn ProductionSlot & Linking to UI
+            // Spawn ProductionQuenes & Linking to UI
             CreateAllProductionQuenes();
         }
     }
@@ -245,11 +248,8 @@ public class ProductionManager : MonoBehaviour
             {
                 Destroy(UI_QueneChild.gameObject);
             }
+            UI_ProductionContent.DetachChildren();
         }
-        
-        // Resets Scrollview 
-        UI_ProductionContent.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
-        
     }
 
     private void UI_UpdateWorkerNumber()
@@ -272,34 +272,21 @@ public class ProductionManager : MonoBehaviour
         }
         else
         {
-            #region BackgroundSizeValues
-            // Get values for Background Size
-            float _prefabHeight = UI_ProductQuenePrefab.GetComponent<RectTransform>().rect.height;
-            float _verticalLayoutSpacing = UI_ProductionContent.GetComponent<VerticalLayoutGroup>().spacing;
-            #endregion
-
             // Creates one clickable Icon & Quene for each Product in the List
             foreach (Product product in productList)
             {
-                // Increase size of Background
-                RectTransform ProdContent_rt = UI_ProductionContent.GetComponent<RectTransform>();
-                ProdContent_rt.sizeDelta = new Vector2(0, ProdContent_rt.sizeDelta.y + _prefabHeight + _verticalLayoutSpacing);
-
-                // Create ProductionQuene UI
-                UI_ProductionQuene _UI_ProductionQuene = _Instantiate_UI_ProductionQuene(product);
-                
                 // Create new ProductionQuene 
                 ProductionQuene _ProductionQuene = _Instantiate_ProductionQuene(product);
+                // Create ProductionQuene UI
+                UI_ProductionQuene _UI_ProductionQuene = _Instantiate_UI_ProductionQuene(product);
 
-                // Better? Waits for EndofFrame so Awake is called
-                StartCoroutine(_InitQuene(_UI_ProductionQuene, _ProductionQuene, product));
-                
-                /*
-                _UI_ProductionQuene.Init(_ProductionQuene, product, this);
+                // Init UI_ProductionQuene & ProductionQuene by linking each other
                 _ProductionQuene.Init(_UI_ProductionQuene, product, _BuildingStorage, this);
-                */
+                _UI_ProductionQuene.Init(_ProductionQuene, product, this);
                 
             }
+
+            UI_ContentHeightUpdater.UpdateHeight();
         }
     }
     private ProductionQuene _Instantiate_ProductionQuene(Product product)
@@ -319,12 +306,9 @@ public class ProductionManager : MonoBehaviour
         const string UI_ProductionQueneName = "ProductQueneUI (";
         GameObject UI_ProductQuene = Instantiate(UI_ProductQuenePrefab, UI_ProductionContent);
         UI_ProductQuene.name = UI_ProductionQueneName + productList.IndexOf(product) + ")";
-        // Sets Icon of the ProductSlot
-        UI_ProductQuene.transform.GetChild(0).GetComponent<Image>().sprite = product.Icon;
-        // Sets maxNeededTicks
-        UI_ProductQuene.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "0|" + product.NeededProductionTime;
+
         // Sets Slider 
-        Slider _slider = UI_ProductQuene.transform.GetChild(2).GetComponent<Slider>();
+        Slider _slider = UI_ProductQuene.transform.GetChild(0).GetChild(2).GetComponent<Slider>();
         _slider.value = 0;
         _slider.maxValue = product.NeededProductionTime;
         _slider.minValue = 0;
@@ -333,16 +317,6 @@ public class ProductionManager : MonoBehaviour
         UI_ProductionQueneList.Add(UI_ProductQuene);
 
         return UI_ProductQuene.GetComponent<UI_ProductionQuene>();
-    }
-
-    /// <summary>
-    /// // Init UI_ProductionQuene & ProductionQuene by linking each other
-    /// </summary>
-    private IEnumerator _InitQuene(UI_ProductionQuene UI, ProductionQuene quene, Product product)
-    {
-        yield return new WaitForEndOfFrame();
-        quene.Init(UI, product, _BuildingStorage, this);
-        UI.Init(quene, product, this);
     }
 
     // Checks for any Quene as Child of this transform and destroys them
@@ -354,6 +328,7 @@ public class ProductionManager : MonoBehaviour
             {
                 Destroy(Quene_Child.gameObject);
             }
+            transform.DetachChildren();
         }
     }
 

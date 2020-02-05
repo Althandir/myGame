@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 [System.Serializable]
-class StorageSlot
+class StorageSlotOld
 {
     //staticValues
     static readonly byte s_maxAmount = 200;
@@ -22,7 +22,7 @@ class StorageSlot
     public byte Amount { get => amount; set => amount = value; }
 
     // create reference to UI & connect to specific Icon & disable Icon on Init
-    public StorageSlot(GameObject SlotReference)
+    public StorageSlotOld(GameObject SlotReference)
     {
         // TODO: Change into Prefab and give References directly in Prefab?
         SlotNum_UIReference = SlotReference;

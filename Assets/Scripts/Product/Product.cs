@@ -18,8 +18,7 @@ public class Product : ScriptableObject
     [SerializeField] float _NeededProductionTime = 0.0f;
 
     [Header("Requirement Settings for this Product.")]
-    [SerializeField] Product[] _RequiredProducts;
-    [SerializeField] byte[] _RequiredAmount;
+    [SerializeField] List<ProductRequirement> _ProductionRequirements;
 
     public Sprite Icon { get => _icon; }
     public float NeededProductionTime { get => _NeededProductionTime; }
@@ -29,8 +28,7 @@ public class Product : ScriptableObject
 
     public byte MinPrice { get => _MinPrice; }
     public byte MaxPrice { get => _MaxPrice; }
-    public Product[] RequiredProducts { get => _RequiredProducts; }
-    public byte[] RequiredAmount { get => _RequiredAmount; }
+    public List<ProductRequirement> ProductRequirements { get => _ProductionRequirements; }
 
     public void OnEnable()
     {
@@ -53,7 +51,7 @@ public class Product : ScriptableObject
         {
             Debug.LogWarning(product.name + genError);
         }
-        if (!ProductRequirementCheck(product))
+        if (!ProductRequirementCheck(product._ProductionRequirements, product))
         {
             Debug.LogWarning(product.name + genError);
         }
@@ -85,11 +83,10 @@ public class Product : ScriptableObject
     /// Returns true if ok.
     /// </summary>
     /// <param name="product"></param>
-    static bool ProductRequirementCheck(Product product)
+    static bool ProductRequirementCheck(List<ProductRequirement> _ProductionRequirements, Product product)
     {
-        if (RequiredProductLenghtCheck(product) && 
-            RequiredProductCheck(product) && 
-            RequiredAmountCheck(product))
+        if (RequiredProductCheck(_ProductionRequirements, product) && 
+            RequiredAmountCheck(_ProductionRequirements, product))
         {
             Debug.Log("Product: Requirement Check ok!");
             return true;
@@ -100,21 +97,11 @@ public class Product : ScriptableObject
         }
     }
 
-    static bool RequiredProductLenghtCheck(Product product)
+    static bool RequiredProductCheck(List<ProductRequirement> _ProductionRequirements, Product product)
     {
-        if (!(product.RequiredAmount.Length == product.RequiredProducts.Length))
+        foreach (ProductRequirement requirement in _ProductionRequirements)
         {
-            Debug.LogError(product.name + " has different Requirementslist lenght!");
-            return false;
-        }
-        return true;
-    }
-
-    static bool RequiredProductCheck(Product product)
-    {
-        foreach (Product requirement in product.RequiredProducts)
-        {
-            if (requirement == null)
+            if (requirement.Product == null)
             {
                 Debug.LogError(product.name + " has missing requirement!");
                 return false;
@@ -123,11 +110,11 @@ public class Product : ScriptableObject
         return true;
     }
 
-    static bool RequiredAmountCheck(Product product)
+    static bool RequiredAmountCheck(List<ProductRequirement> _ProductionRequirements, Product product)
     {
-        foreach (var number in product.RequiredAmount)
+        foreach (ProductRequirement requirement in _ProductionRequirements)
         {
-            if (number <= 0)
+            if (requirement.Amount <= 0)
             {
                 Debug.LogError(product.name + " has wrong required amount!");
                 return false;
